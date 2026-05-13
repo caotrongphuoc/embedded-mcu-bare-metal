@@ -183,6 +183,7 @@ do { \
 do { \
     for (uint8_t i = 0; i < NUM_ZOMBIES; i++) { \
         if (zombie[i].visible != WHITE) continue; \
+        if (zombie[i].rising) continue; \
         for (uint8_t j = 0; j < MAX_NUM_BULLET; j++) { \
             if (bullet[j].visible != WHITE) continue; \
             \
@@ -208,8 +209,8 @@ do { \
                 { \
                     uint8_t bk = bang_alloc_slot(); \
                     bang[bk].visible = WHITE; \
-                    bang[bk].x = (dead_x > 5) ? (uint32_t)(dead_x - 5) : 0; \
-                    bang[bk].y = dead_y + 2; \
+                    bang[bk].x = (dead_x + 5 > 0) ? (uint32_t)(dead_x + 5) : 0; \
+                    bang[bk].y = (dead_y >= 2) ? dead_y - 2 : 0; \
                     bang[bk].action_image = 1; \
                 } \
                 task_post_pure_msg(ZW_GAME_BORDER_ID, ZW_GAME_ZOMBIE_KILLED); \
