@@ -5,14 +5,6 @@
 
 <hr>
 
-
-<div align="center">
-    <video src="https://github.com/ak-embedded-software/Gunner-game/assets/54855481/d493703c-bf5b-4fd2-ae04-b86784a01231" alt="epcb Gunner game" height=200/>
-</div>
-
-
-<hr>
-
 ## I. Giới thiệu
 
 Zomwar là một tựa game sinh tồn hành động được phát triển trực tiếp trên nền tảng AK Embedded Base Kit. Dự án này được xây dựng như một học liệu thực tế, giúp những người đam mê lập trình nhúng có thể tiếp cận, tìm hiểu và thực hành chuyên sâu về tư duy lập trình hướng sự kiện (Event-driven Programming).
