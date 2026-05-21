@@ -248,6 +248,19 @@ enum {
 };
 
 /*****************************************************************************/
+/*  Zomwar game 'TOMBSTONE' task define
+ */
+/*****************************************************************************/
+/* define timer */
+/* define signal */
+enum {
+	ZW_GAME_TOMBSTONE_SETUP = ZW_GAME_DEFINE_SIG,
+	ZW_GAME_TOMBSTONE_UPDATE,
+	ZW_GAME_TOMBSTONE_SPAWN,
+	ZW_GAME_TOMBSTONE_RESET,
+};
+
+/*****************************************************************************/
 /*  app function declare
  */
 /*****************************************************************************/

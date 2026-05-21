@@ -30,6 +30,7 @@
 #include "zw_game_border.h"
 #include "zw_game_car.h"
 #include "zw_game_zombie.h"
+#include "zw_game_tombstone.h"
 
 extern zw_game_setting_t settingsetup;
 

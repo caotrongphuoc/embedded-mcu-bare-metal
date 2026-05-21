@@ -331,6 +331,7 @@ void scr_zw_game_handle(ak_msg_t* msg) {
 		task_post_pure_msg(ZW_GAME_GUNNER_ID, 		ZW_GAME_GUNNER_SETUP);
 		task_post_pure_msg(ZW_GAME_BULLET_ID, 	 	ZW_GAME_BULLET_SETUP);
 		task_post_pure_msg(ZW_GAME_ZOMBIE_ID, 		ZW_GAME_ZOMBIE_SETUP);
+		task_post_pure_msg(ZW_GAME_TOMBSTONE_ID,	ZW_GAME_TOMBSTONE_SETUP);
 		task_post_pure_msg(ZW_GAME_CAR_ID, 			ZW_GAME_CAR_SETUP);
 		task_post_pure_msg(ZW_GAME_BANG_ID, 	 	ZW_GAME_BANG_SETUP);
 		task_post_pure_msg(ZW_GAME_BORDER_ID, 	 	ZW_GAME_BORDER_SETUP);
@@ -349,6 +350,7 @@ void scr_zw_game_handle(ak_msg_t* msg) {
 			task_post_pure_msg(ZW_GAME_BULLET_ID, 		ZW_GAME_BULLET_RUN);
 			task_post_pure_msg(ZW_GAME_ZOMBIE_ID, 		ZW_GAME_ZOMBIE_RUN);
 			task_post_pure_msg(ZW_GAME_ZOMBIE_ID, 		ZW_GAME_ZOMBIE_DETONATOR);
+			task_post_pure_msg(ZW_GAME_TOMBSTONE_ID,	ZW_GAME_TOMBSTONE_UPDATE);
 			task_post_pure_msg(ZW_GAME_CAR_ID,  		ZW_GAME_CAR_RUN);
 			task_post_pure_msg(ZW_GAME_BANG_ID, 		ZW_GAME_BANG_UPDATE);
 			task_post_pure_msg(ZW_GAME_BORDER_ID, 		ZW_GAME_CHECK_GAME_OVER);
@@ -379,6 +381,7 @@ void scr_zw_game_handle(ak_msg_t* msg) {
 		task_post_pure_msg(ZW_GAME_GUNNER_ID, 		ZW_GAME_GUNNER_RESET);
 		task_post_pure_msg(ZW_GAME_BULLET_ID, 		ZW_GAME_BULLET_RESET);
 		task_post_pure_msg(ZW_GAME_ZOMBIE_ID,		ZW_GAME_ZOMBIE_RESET);
+		task_post_pure_msg(ZW_GAME_TOMBSTONE_ID,	ZW_GAME_TOMBSTONE_RESET);
 		task_post_pure_msg(ZW_GAME_CAR_ID,  		ZW_GAME_CAR_RESET);
 		task_post_pure_msg(ZW_GAME_BANG_ID, 		ZW_GAME_BANG_RESET);
 		task_post_pure_msg(ZW_GAME_BORDER_ID, 		ZW_GAME_BORDER_RESET);
