@@ -25,6 +25,8 @@ void em_game_frame_display()
 
     // Chấm pen
     view_render.fillRect(61, 45, 3, 3, WHITE);
+
+	view_render.drawBitmap(56, 14, bitmap_goalkeeper, 13, 16, WHITE);
 }
 
 /*****************************************************************************/
