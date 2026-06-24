@@ -1,1 +1,0 @@
-include sources/app/game/game_11m/Makefile.mk
