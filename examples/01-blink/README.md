@@ -26,10 +26,11 @@ LED: PB8 (LED_LIFE trên AK Base Kit, active-low — pin LOW thì đèn sáng)
 ## File
 
 | File | Vai trò |
-| bm_led_blink.h | Khai báo struct register (GPIO, RCC), base address, bit defines, board mapping (LED_PORT/LED_PIN) |
-| main.c | Startup code (vector table + Reset_Handler), delay, main() — logic blink |
-| stm32l151xx.ld | Đây là linker script với kích thước Flash là 128KB (0x08000000) và SRAM là 16KB (0x20000000) |
-| Makefile | File build và flash firmware |
+|---|---|
+| `bm_led_blink.h` | Khai báo các `struct` thanh ghi (GPIO, RCC), địa chỉ base, các định nghĩa bit (`bit defines`) và ánh xạ phần cứng (`LED_PORT`, `LED_PIN`). |
+| `main.c` | Chứa mã khởi động (`vector table`, `Reset_Handler`), hàm `delay()` và `main()` — xử lý logic nhấp nháy LED. |
+| `stm32l151xx.ld` | Linker script định nghĩa vùng nhớ của vi điều khiển: Flash 128 KB tại `0x08000000` và SRAM 16 KB tại `0x20000000`. |
+| `Makefile` | Tự động hóa quá trình build và nạp (flash) firmware. |
 
 ## Build và flash
 
