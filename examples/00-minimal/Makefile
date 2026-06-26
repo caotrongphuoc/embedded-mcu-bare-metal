@@ -15,8 +15,8 @@ FLASH_BASE_ADDR_VAL = 0x08003000
 NAME_MODULE = 00-minimal-application
 PROJECT     = $(NAME_MODULE)
 
-GCC_PATH = /home/ctp/Workspace/Tools/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10
-PROGRAMER_PATH = /home/ctp/Workspace/Tools/STM32CubeProgrammer/bin
+GCC_PATH = /home/phuoc/Workspace/Tools/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10
+PROGRAMER_PATH = /home/phuoc/Workspace/Tools/STM32CubeProgrammer/bin
 
 #|---------------------------------------------------------------------------------------------------|
 #| OPTIMIZE LEVELS                                                                                   |
@@ -108,12 +108,12 @@ help:
 
 .PHONY: flash
 flash: all
-	$(Print) FLASH $(TARGET:.elf=.bin) to target via ST-Link (SWD)
-	@$(PROGRAMER_PATH)/STM32_Programmer_CLI -c port=SWD -w $(TARGET:.elf=.bin) $(FLASH_BASE_ADDR_VAL) -v -rst
 ifdef dev
+	$(Print) "FLASH $(TARGET:.elf=.bin) to target via ak-flash (UART)"
 	ak-flash $(dev) $(TARGET:.elf=.bin) $(FLASH_BASE_ADDR_VAL)
 else
-	@st-flash --connect-under-reset --reset write $(TARGET:.elf=.bin) $(FLASH_BASE_ADDR_VAL)
+	$(Print) "FLASH $(TARGET:.elf=.bin) to target via ST-Link (SWD)"
+	@$(PROGRAMER_PATH)/STM32_Programmer_CLI -c port=SWD -w $(TARGET:.elf=.bin) $(FLASH_BASE_ADDR_VAL) -v -rst
 endif
 
 .PHONY: clean
