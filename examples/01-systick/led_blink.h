@@ -1,5 +1,5 @@
-#ifndef __BM_LED_BLINK_H__
-#define __BM_LED_BLINK_H__
+#ifndef __LED_BLINK_H__
+#define __LED_BLINK_H__
 
 #include <stdint.h>
 
@@ -20,4 +20,4 @@
 #define SYSCLK_HZ 2097000U
 #define TICK_HZ 1000U
 
-#endif // __BM_LED_BLINK_H__
+#endif // __LED_BLINK_H__
