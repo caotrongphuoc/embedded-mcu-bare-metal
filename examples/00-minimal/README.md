@@ -1,3 +1,3 @@
-# 00-minimal - Lập trình bare-metal chớp tắt LED không dùng thư viện HAL, CMSIS hay file do ST cung cấp
+# 00-minimal - Programming bare-metal LED blinking without using HAL, CMSIS libraries or files provided by ST.
 
-Hi anh em, nay mình sẽ giới thiệu với anh em một ví dụ chớp tắt LED (PB8) AK Embedded Base Kit (STM32L151) không dùng HAL, không dùng CMSIS, không dùng bất kỳ file nào do ST cung cấp. Tự viết hết, từ Reset_Handler đến linker script. 
+Hey guys, today I'm going to show you an example of an LED blinking controller for the AK Embedded Base Kit (STM32L151) (PB8) that doesn't use HAL, CMSIS, or any files provided by ST. Everything is written from scratch, from Reset_Handler to linker script.
