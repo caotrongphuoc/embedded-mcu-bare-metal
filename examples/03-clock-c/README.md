@@ -8,7 +8,7 @@ Same LED blink as [`02-struct-c`](../02-struct-c/). The only change: SYSCLK now 
 
 ## How it works
 
-`clock_init()` walks the sequence from RM0038 §6.3. The order matters — swapping any two steps either bricks the switch or crashes the first flash fetch at the new speed.
+`clock_init()` walks the sequence from RM0038. The order matters — swapping any two steps either bricks the switch or crashes the first flash fetch at the new speed.
 
 1. **Enable the PWR peripheral clock** (`RCC->APB1ENR` bit 28). Its clock is gated off at reset; without this, writes to `PWR->CR` are silently dropped.
 2. **Voltage scaling range 1** (`PWR->CR` VOS = 01). Range 1 is 1.8 V and is the only range that allows 32 MHz. Wait for `PWR->CSR` VOSF to clear — the regulator takes a moment to settle.
