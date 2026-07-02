@@ -58,8 +58,6 @@ The visible result is the same across every example — this single clip shows w
 | 02 | [`02-struct-c`](examples/02-struct-c/) | `typedef struct` register access (CMSIS-style, still hand-written) |
 | 03 | [`03-cmsis-c`](examples/03-cmsis-c/) | Drop hand-written structs — `#include "stm32l1xx.h"` (CMSIS-Core + CMSIS-Device from ST) |
 
-Planned next: `04-hal-c`.
-
 ## Quick start
 
 To build the source and flash firmware onto the kit, you need a Linux development environment. Step-by-step setup instructions:
