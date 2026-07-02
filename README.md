@@ -77,3 +77,20 @@ make debug    # openocd + arm-none-eabi-gdb
 
 - [STM32World/stm32fun](https://github.com/STM32World/stm32fun) — bare-metal STM32 coding style
 - STM32L1 reference manual (RM0038) and STM32L151CBT6 datasheet in [`resources/datasheet/`](resources/datasheet/)
+
+## Contact & Support
+
+<p style="font-size: 20px;"><strong>Cao Trong Phuoc</strong> - Software Engineer - Embedded Systems</p>
+
+``` Note
+Thank you for visiting this repository.
+If you have any questions, suggestions, or feedback about this project or firmware development, feel free to contact me directly.
+```
+
+<a href="https://github.com/caotrongphuoc">
+  <img src="https://img.shields.io/badge/GitHub-caotrongphuoc-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
+
+<a href="https://www.linkedin.com/in/cao-trong-phuoc/">
+  <img src="https://img.shields.io/badge/LinkedIn-Cao%20Trong%20Phuoc-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
