@@ -63,8 +63,6 @@ This is where the hand-written work pays off. Everything we crafted in `02-struc
 - **CMSIS is not magic.** Open `cmsis/stm32l151xb.h` and you see the same `typedef struct { volatile uint32_t MODER; ... }` we wrote by hand, plus every other register we skipped. Nothing is hidden.
 - **Named constants beat raw bits.** `RCC_AHBENR_GPIOBEN` is easier to read than `(1U << 1)` and stays correct if the register layout ever changes.
 
-The next example (`04-hal-c`) climbs one more step: instead of writing register operations by hand, we call HAL functions that wrap them.
-
 ## Where the CMSIS headers come from
 
 All 8 files in [`cmsis/`](./cmsis/) are Apache-2.0 vendored copies.
