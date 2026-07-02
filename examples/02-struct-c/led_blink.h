@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-// GPIO register block — RM0038 §7.4 (offset 0x00..0x18)
+// GPIO register block — (offset 0x00..0x18)
 typedef struct
 {
 	volatile uint32_t MODER;   // 0x00: port mode
@@ -15,7 +15,7 @@ typedef struct
 	volatile uint32_t BSRR;    // 0x18: bit set/reset
 } GPIO_TypeDef;
 
-// RCC register block — RM0038 §6.3 (At AHBENR, offset 0x1C)
+// RCC register block — (At AHBENR, offset 0x1C)
 typedef struct
 {
 	volatile uint32_t CR;       // 0x00
