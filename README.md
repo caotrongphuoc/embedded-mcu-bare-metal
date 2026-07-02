@@ -10,6 +10,17 @@ A collection of bare-metal examples for microcontrollers, written with hand-craf
 
 Every example blinks the same LED. Each one changes exactly one technique, so the diff between adjacent folders shows the concept being introduced — from raw register writes all the way up to HAL.
 
+## Demo
+
+<div align="center">
+
+<!-- this block with the demo clip once uploaded-->
+(demo clip coming soon)
+
+</div>
+
+The visible result is the same across every example — this single clip shows what "it works" looks like for the whole series. Each example's own README focuses on the code change, not the video.
+
 ## Architecture
 
 ```
