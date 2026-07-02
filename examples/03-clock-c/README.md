@@ -2,9 +2,41 @@
 
 Same LED blink as [`02-struct-c`](../02-struct-c/). The only change: SYSCLK now runs at 32 MHz (STM32L1 maximum) instead of the 2.097 MHz MSI default. The new code is one `clock_init()` function called at the top of `main()`.
 
-## Result
+Demo clip for the whole series lives in the [root README](../../README.md#demo).
 
-<!-- Add LED blink video / gif here. Blink cadence stays 100 ms on / 100 ms off — the visual is the same but the CPU runs 15× faster. -->
+## Diff from 02-struct-c
+
+**New peripheral structs** — added PWR and FLASH; RCC extended to `APB1ENR`:
+```diff
++typedef struct { volatile uint32_t CR; volatile uint32_t CSR; } PWR_TypeDef;
++typedef struct { volatile uint32_t ACR; } FLASH_TypeDef;
++
+ typedef struct {
+     // ...
+     volatile uint32_t AHBENR;   // 0x1C
++    volatile uint32_t APB2ENR;  // 0x20
++    volatile uint32_t APB1ENR;  // 0x24
+ } RCC_TypeDef;
++#define PWR   ((PWR_TypeDef*)  0x40007000UL)
++#define FLASH ((FLASH_TypeDef*)0x40023C00UL)
+```
+
+**SYSCLK constant** — 2.097 MHz MSI → 32 MHz PLL:
+```diff
+-#define SYSCLK_HZ  2097000U
++#define SYSCLK_HZ  32000000U
+```
+
+**`main()`** — starts with a new `clock_init()`:
+```diff
+ int main(void) {
++    clock_init();
+     RCC->AHBENR |= (1U << 1);
+     // ...
+ }
+```
+
+The `clock_init()` body itself is the new work — see `led_blink.c` for the seven-step PWR → FLASH → HSI → PLL sequence.
 
 ## How it works
 
