@@ -75,8 +75,15 @@ make debug    # openocd + arm-none-eabi-gdb
 
 ## References
 
+**Datasheets & manuals** in [`resources/datasheet/`](resources/datasheet/):
+- **RM0038** — STM32L100/L151/L152/L162 reference manual (peripheral register maps)
+- **STM32L151CBT6 datasheet** — pinout, electrical characteristics
+- **PM0056** — STM32 Cortex-M3 programming manual (NVIC, SysTick, exceptions) *[to download]*
+- **DDI 0337** — Cortex-M3 Technical Reference Manual from ARM *[to download]*
+
+**Related bare-metal STM32 repos:**
 - [STM32World/stm32fun](https://github.com/STM32World/stm32fun) — bare-metal STM32 coding style
-- STM32L1 reference manual (RM0038) and STM32L151CBT6 datasheet in [`resources/datasheet/`](resources/datasheet/)
+- [the-ak-foundation/akos](https://github.com/the-ak-foundation/akos) — bare-metal OS reference (Makefile / repo layout)
 
 ## Contact & Support
 
