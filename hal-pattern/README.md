@@ -2,7 +2,7 @@
 
 Peripheral driver patterns: raw register access (macro and struct), CMSIS-Device, HAL blocking, and HAL non-blocking.
 
-Same LED blink behavior in every subfolder — only the way registers are declared and touched changes.
+Same LED blink behavior in every subfolder - only the way registers are declared and touched changes.
 
 ## Subfolders
 
