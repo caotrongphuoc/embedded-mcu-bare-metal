@@ -38,7 +38,7 @@ GPIOB->MODER |= (1U << (LED_PIN * 2));
 GPIOB->ODR ^= (1U << LED_PIN);
 ```
 
-The compiler computes `GPIOB->ODR` as `base + offsetof(GPIO_TypeDef, ODR)` = `0x40020400 + 0x14` = `0x40020414` — the same address as `00-register-macro`.
+The compiler computes `GPIOB->ODR` as `base + offsetof(GPIO_TypeDef, ODR)` = `0x40020400 + 0x14` = `0x40020414` - the same address as `00-register-macro`.
 
 ## Build / Flash / Debug
 
