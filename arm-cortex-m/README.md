@@ -2,7 +2,7 @@
 
 ARM Cortex-M architecture topics: SysTick, NVIC, MSP/PSP, and context switching.
 
-Everything here belongs to the CPU core itself, not the STM32 peripherals — portable to any Cortex-M chip.
+Everything here belongs to the CPU core itself, not the STM32 peripherals - portable to any Cortex-M chip.
 
 ## Subfolders
 
