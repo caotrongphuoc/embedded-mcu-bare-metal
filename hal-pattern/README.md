@@ -16,9 +16,9 @@ Same LED blink behavior in every subfolder - only the way registers are declared
 
 ## Before you start
 
-Read [`arm-cortex-m/00-systick`](../arm-cortex-m/00-systick/) first — every folder here uses SysTick for the 1 ms tick.
+Read [`arm-cortex-m/00-systick`](../arm-cortex-m/00-systick/) first - every folder here uses SysTick for the 1 ms tick.
 
 ## Reading order
 
-Read them 00 → 01 → 02 → 03 → 04 — each step wraps the previous one.
+Read them 00 → 01 → 02 → 03 → 04 - each step wraps the previous one.
 
