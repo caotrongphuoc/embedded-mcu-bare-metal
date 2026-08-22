@@ -76,7 +76,7 @@ The result is the same across every example — this single clip shows what "it 
 
 To build the source and flash firmware onto the kit, you need a Linux development environment. Step-by-step setup instructions:
 
-**[AK Embedded Base Kit STM32L151 — Getting Started](https://epcb.vn/blogs/ak-embedded-software/ak-embedded-base-kit-stm32l151-getting-started)**
+**[AK Embedded Base Kit STM32L151 - Getting Started](https://epcb.vn/blogs/ak-embedded-software/ak-embedded-base-kit-stm32l151-getting-started)**
 
 Once the toolchain is ready, each example builds the same way:
 
