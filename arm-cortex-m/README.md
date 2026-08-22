@@ -12,4 +12,4 @@ Everything here belongs to the CPU core itself, not the STM32 peripherals - port
 
 ## Before you start
 
-Read [`compiler/`](../compiler/) first — startup code is the same skeleton used in every example here.
+Read [`compiler/`](../compiler/) first - startup code is the same skeleton used in every example here.
