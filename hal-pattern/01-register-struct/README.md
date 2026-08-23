@@ -52,6 +52,6 @@ make debug
 
 The struct captures the memory layout of the peripheral once. Every register on that peripheral is a field on the same base pointer.
 
-Same pattern used by CMSIS device headers — see [`02-cmsis-device/`](../02-cmsis-device/), where these hand-written structs are replaced by ST's `stm32l151xb.h`.
+Same pattern used by CMSIS device headers - see [`02-cmsis-device/`](../02-cmsis-device/), where these hand-written structs are replaced by ST's `stm32l151xb.h`.
 
 Compare with [`00-register-macro/`](../00-register-macro/), which declares each register as a separate `#define` at a hard-coded address.

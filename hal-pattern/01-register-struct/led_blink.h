@@ -7,8 +7,8 @@
  * GPIO register block (layout from RM0038 8.4)
  * Base + field offset gives the address; the compiler does the arithmetic.
  * GPIOB base = 0x40020400
- *   MODER  → 0x40020400 + 0x00
- *   ODR    → 0x40020400 + 0x14
+ *   MODER  -> 0x40020400 + 0x00
+ *   ODR    -> 0x40020400 + 0x14
  */
 typedef struct
 {
@@ -22,7 +22,7 @@ typedef struct
 
 /*
  * RCC register block (layout from RM0038 6.3)
- * RCC base = 0x40023800 → AHBENR at offset 0x1C
+ * RCC base = 0x40023800 -> AHBENR at offset 0x1C
  */
 typedef struct
 {
