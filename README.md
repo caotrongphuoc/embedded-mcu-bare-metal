@@ -26,19 +26,19 @@ The result is the same across every example - this single clip shows what "it wo
 ┌─────────────────────────────────────────────────────────────────────┐
 │ APPLICATION LAYER                                                   │
 │                                                                     │
-│ main() · interrupt handlers · helper routines                       │
+│ main(), interrupt handlers, helper routines                         │
 └─────────────────────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────────────────────┐
 │ STARTUP                                                             │
 │                                                                     │
-│ Vector Table · Reset Handler                                        │
-│ (interrupt vectors · BSS zero · .data copy · call main)             │
+│ Vector Table, Reset Handler                                         │
+│ (interrupt vectors, BSS zero, .data copy, call main)                │
 └─────────────────────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────────────────────┐
 │ HARDWARE LAYER                                                      │
 │                                                                     │
-│ CPU Core · Interrupt Controller · System Timer                      │
-│ GPIO · Clock · Flash · RAM · UART · Timer · ADC · ...               │
+│ CPU Core, Interrupt Controller, System Timer                        │
+│ GPIO, Clock, Flash, RAM, UART, Timer, ADC, ...                      │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
