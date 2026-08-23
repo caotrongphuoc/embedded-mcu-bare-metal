@@ -20,5 +20,5 @@ Read [`arm-cortex-m/00-systick`](../arm-cortex-m/00-systick/) first - every fold
 
 ## Reading order
 
-Read them 00 → 01 → 02 → 03 → 04 - each step wraps the previous one.
+Read them 00 -> 01 -> 02 -> 03 -> 04 - each step wraps the previous one.
 
