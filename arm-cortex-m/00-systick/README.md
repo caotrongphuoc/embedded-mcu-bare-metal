@@ -1,23 +1,23 @@
 # 00-systick - SysTick LED blink
 
-Blink LED PB8 on STM32L151CBT6 using SysTick. This example keeps the same startup code, linker script, and raw register access from [`compiler/00-startup-c`](../../compiler/00-startup-c/). The vector table grows from 2 entries to 16 to hold the SysTick slot, and the busy-loop delay is replaced by a 1 ms SysTick interrupt.
+Blink LED PB8 on STM32L151CBT6 using SysTick instead of a busy-loop delay. The startup code, linker script, and raw register access are the same as [`compiler/00-startup-c`](../../compiler/00-startup-c/); two things change: the vector table grows from 2 entries to 16 so it can hold the SysTick slot, and delay logic moves from a `nop` loop into a 1 ms interrupt.
 
-No HAL. No CMSIS. No ST startup files.
+Still no HAL, no CMSIS headers, no ST startup files - everything is written by hand.
 
 Demo clip for every example lives in the [root README](../../README.md#demo).
 
-## What Changed From 00-Startup-C
+## What changed from 00-startup-c
 
-### Vector Table
+### Vector table
 
-`00-startup-c` only needs two entries:
+`00-startup-c` only needed two entries:
 
 ```c
 _estack,
 Reset_Handler,
 ```
 
-This example adds the Cortex-M exception entries up to SysTick. SysTick is exception slot 15.
+SysTick sits at exception slot 15, so the table has to be long enough to reach it. The 13 slots in between are unused exceptions - fill them with zeros:
 
 ```c
 __attribute__((section(".isr_vector"))) void (*const g_pfnVectors[16])(void) = {
@@ -40,9 +40,9 @@ __attribute__((section(".isr_vector"))) void (*const g_pfnVectors[16])(void) = {
 };
 ```
 
-### SysTick Registers
+### SysTick registers
 
-The SysTick registers are memory-mapped at `0xE000E010`.
+SysTick lives in the Cortex-M system control space at `0xE000E010`:
 
 ```c
 #define SYST_CSR (*(volatile uint32_t*)0xE000E010)
@@ -50,24 +50,24 @@ The SysTick registers are memory-mapped at `0xE000E010`.
 #define SYST_CVR (*(volatile uint32_t*)0xE000E018)
 ```
 
-The reload value is calculated from the system clock:
+The reload value comes from the system clock and the desired tick rate:
 
 ```c
 SYST_RVR = (SYSCLK_HZ / TICK_HZ) - 1U;
 ```
 
-With:
+With the MSI default clock and a 1 kHz tick:
 
 ```c
 #define SYSCLK_HZ 2097000U
 #define TICK_HZ 1000U
 ```
 
-the timer generates one interrupt every 1 ms.
+the counter fires one interrupt every 1 ms.
 
-### SysTick Handler
+### SysTick handler
 
-SysTick fires every 1 ms and increments `g_tick`.
+The handler runs every 1 ms and just bumps a counter:
 
 ```c
 volatile uint32_t g_tick;
@@ -78,11 +78,11 @@ void SysTick_Handler(void)
 }
 ```
 
-`g_tick` is `volatile` because it is written in an interrupt and read in `main()`.
+`g_tick` has to be `volatile` because it is written from an ISR and read from `main()` - without it the compiler is free to cache the value in a register and never see the update.
 
-### Main Loop
+### Main loop
 
-The LED toggles every 100 ticks.
+Instead of a `nop` delay, the loop watches `g_tick`:
 
 ```c
 uint32_t last_tick = g_tick;
@@ -97,16 +97,17 @@ for (;;)
 }
 ```
 
-Unsigned subtraction keeps working when `g_tick` wraps around.
+The subtraction is done on unsigned values on purpose - when `g_tick` eventually wraps past `0xFFFFFFFF`, `g_tick - last_tick` still gives the correct elapsed count.
 
-## How It Works
+## Flow at a glance
 
-1. `Reset_Handler` initializes `.bss` and `.data`, then calls `main()`.
-2. `main()` enables the GPIOB clock.
-3. `main()` configures PB8 as output.
-4. `main()` configures SysTick for 1 ms interrupts.
-5. `SysTick_Handler` increments `g_tick`.
-6. The main loop toggles PB8 every 100 ms.
+1. `Reset_Handler` initializes `.bss` / `.data`, then jumps to `main()`.
+2. `main()` enables the GPIOB clock and configures PB8 as output.
+3. `main()` programs SysTick for a 1 ms tick and enables its interrupt.
+4. SysTick fires forever in the background; the handler increments `g_tick`.
+5. The main loop toggles PB8 whenever 100 ticks have passed.
+
+This is the first example in the series that uses an interrupt, and every later example relies on the same 1 ms tick. Compared with a `nop` delay, the timing here is anchored to the hardware clock, so it no longer drifts with compiler optimization level.
 
 ## Build / Flash / Debug
 
@@ -115,9 +116,3 @@ make
 make flash
 make debug
 ```
-
-## Meaning
-
-This example introduces the first interrupt in the series.
-
-`00-startup-c` uses a busy-loop delay. This example uses SysTick, so timing no longer depends on the number of `nop` instructions or compiler optimization.
