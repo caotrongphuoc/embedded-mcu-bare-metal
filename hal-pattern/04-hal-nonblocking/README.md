@@ -28,7 +28,7 @@ Only the main loop changes:
 +}
 ```
 
-`HAL_GetTick` returns the HAL-internal `uwTick` — the same counter `HAL_Delay` reads.
+`HAL_GetTick` returns the HAL-internal `uwTick` - the same counter `HAL_Delay` reads.
 
 ## How It Works
 
@@ -36,7 +36,7 @@ Only the main loop changes:
 
 Subtracting `last_tick` handles the 32-bit counter wrap around: unsigned subtraction stays correct across the rollover point.
 
-The loop can do other work when the 100 ms window has not elapsed. `HAL_Delay` cannot — it spins inside HAL until the time is up.
+The loop can do other work when the 100 ms window has not elapsed. `HAL_Delay` cannot - it spins inside HAL until the time is up.
 
 ## Build / Flash / Debug
 
