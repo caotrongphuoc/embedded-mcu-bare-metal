@@ -42,39 +42,25 @@ The result is the same across every example - this single clip shows what "it wo
 
 ## Hardware support
 
-<div align="center">
-
 | Board | MCU | Status |
 |:-----:|:---:|:------:|
 | [AK Embedded Base Kit](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) | STM32L151CBT6 (ARM Cortex-M3) | Primary target |
-
-</div>
 
 ## Topics
 
 ### [`compiler/`](compiler/)
 
-<div align="center">
-
 | Folder | Concept |
 |:------:|:-------:|
 | [`00-startup-c/`](compiler/00-startup-c/) | Linker script and C `Reset_Handler` |
 
-</div>
-
 ### [`arm-cortex-m/`](arm-cortex-m/)
-
-<div align="center">
 
 | Folder | Concept |
 |:------:|:-------:|
 | [`00-systick/`](arm-cortex-m/00-systick/) | 1 ms SysTick tick and interrupt |
 
-</div>
-
 ### [`hal-pattern/`](hal-pattern/)
-
-<div align="center">
 
 | Folder | Concept |
 |:------:|:-------:|
@@ -83,8 +69,6 @@ The result is the same across every example - this single clip shows what "it wo
 | [`02-cmsis-device/`](hal-pattern/02-cmsis-device/) | CMSIS-Device vendor headers |
 | [`03-hal-blocking/`](hal-pattern/03-hal-blocking/) | HAL with blocking `HAL_Delay` |
 | [`04-hal-nonblocking/`](hal-pattern/04-hal-nonblocking/) | HAL with non-blocking `HAL_GetTick` |
-
-</div>
 
 ## Quick start
 
