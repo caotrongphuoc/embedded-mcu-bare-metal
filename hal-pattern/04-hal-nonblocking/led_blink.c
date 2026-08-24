@@ -53,9 +53,9 @@ int main(void)
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 
 	GPIO_InitTypeDef gpio_init = {
-	    .Pin = LED_PIN,
-	    .Mode = GPIO_MODE_OUTPUT_PP,
-	    .Pull = GPIO_NOPULL,
+	    .Pin   = LED_PIN,
+	    .Mode  = GPIO_MODE_OUTPUT_PP,
+	    .Pull  = GPIO_NOPULL,
 	    .Speed = GPIO_SPEED_FREQ_LOW,
 	};
 	HAL_GPIO_Init(LED_PORT, &gpio_init);
