@@ -1,14 +1,12 @@
 # 04-hal-nonblocking - HAL with non-blocking tick
 
-Blink LED PB8 with `HAL_GetTick` instead of `HAL_Delay`.
-
-This example keeps the same behavior as [`03-hal-blocking`](../03-hal-blocking/). The main loop is non-blocking, so it can do other work between toggles.
+Blink LED PB8 using `HAL_GetTick` instead of `HAL_Delay`. Same LED, same clock, same 1 ms tick source as [`03-hal-blocking`](../03-hal-blocking/) - the only thing that changes is the shape of the main loop, so the CPU is free to do other work between toggles.
 
 Demo clip for every example lives in the [root README](../../README.md#demo).
 
-## Diff From 03-Hal-Blocking
+## What changed from 03-hal-blocking
 
-Only the main loop changes:
+Only the main loop is different - init, HAL sources, and the SysTick handler are all untouched:
 
 ```diff
 -for (;;)
@@ -28,15 +26,15 @@ Only the main loop changes:
 +}
 ```
 
-`HAL_GetTick` returns the HAL-internal `uwTick` - the same counter `HAL_Delay` reads.
+`HAL_GetTick` just reads HAL's internal `uwTick` and returns it - the same counter `HAL_Delay` was spinning on in the previous example. The difference is that now the reading happens in the main loop, so if the 100 ms window hasn't elapsed yet, control drops out of the `if` and the rest of the loop is free to run.
 
-## How It Works
+The subtraction is deliberate: doing `HAL_GetTick() - last_tick` on unsigned 32-bit values stays correct even when `uwTick` eventually wraps past `0xFFFFFFFF` - the same trick used with `g_tick` back in `arm-cortex-m/00-systick`.
 
-`HAL_GetTick` reads `uwTick` and returns it.
+## Why it matters
 
-Subtracting `last_tick` handles the 32-bit counter wrap around: unsigned subtraction stays correct across the rollover point.
+`HAL_Delay(100)` stops the CPU for the full 100 ms - nothing else can run in that window unless it comes from an interrupt.
 
-The loop can do other work when the 100 ms window has not elapsed. `HAL_Delay` cannot - it spins inside HAL until the time is up.
+`HAL_GetTick` plus an unsigned subtract lets the same loop check the time, toggle when the window has elapsed, and fall through to other work otherwise. This is the shape you want the moment there is more than one thing happening in the main loop - reading a sensor, driving a UART, servicing a button - and it is the pattern every later example in the series builds on.
 
 ## Build / Flash / Debug
 
@@ -45,11 +43,3 @@ make
 make flash
 make debug
 ```
-
-## Meaning
-
-`HAL_Delay` stops the CPU for 100 ms.
-
-`HAL_GetTick` plus subtract lets other code run in the same window.
-
-Same clock, same LED, same tick source. Different loop shape.
