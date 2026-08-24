@@ -16,8 +16,6 @@ Every example blinks the same LED. Each one changes exactly one technique, so th
   <video src="https://github.com/user-attachments/assets/39f845b1-70a8-48ca-bb93-bfc019553a98" controls width="480"></video>
 </div>
 
-</div>
-
 The result is the same across every example - this single clip shows what "it works" looks like for every example. Each example's own README focuses on the code change, not the video.
 
 ## Architecture
