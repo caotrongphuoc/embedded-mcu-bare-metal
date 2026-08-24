@@ -1,17 +1,41 @@
 ---
 Language: Cpp
 BasedOnStyle: LLVM
-UseTab: ForIndentation
+
 IndentWidth: 4
 TabWidth: 4
+UseTab: ForIndentation
+ContinuationIndentWidth: 4
 ColumnLimit: 0
+
 BreakBeforeBraces: Allman
-AllowShortIfStatementsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: None
-AllowShortBlocksOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false
+
+AlignConsecutiveMacros: Consecutive
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: false
+AlignTrailingComments: true
+AlignAfterOpenBracket: Align
+AlignEscapedNewlines: Left
+
 PointerAlignment: Left
+DerivePointerAlignment: false
+
 SpaceBeforeParens: ControlStatements
-IndentCaseLabels: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpacesBeforeTrailingComments: 1
+SpaceAfterCStyleCast: false
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+
+IncludeBlocks: Preserve
 SortIncludes: false
-...
+
+IndentCaseLabels: false
+IndentPPDirectives: None
