@@ -76,8 +76,10 @@ Two new bits go into the Makefile so the compiler can find the headers and pick 
 
 The CMSIS files are vendored in [`cmsis/`](./cmsis/) so the build has no external dependency.
 
+<div align="center">
+
 | File | Source | Provides |
-|------|--------|----------|
+|:----:|:------:|:--------:|
 | `core_cm3.h` | ARM CMSIS-Core | Cortex-M3 core registers, `SysTick`, `SysTick_Config()`, `NVIC_*` |
 | `cmsis_gcc.h` | ARM CMSIS-Core | GCC compiler intrinsics |
 | `cmsis_compiler.h` | ARM CMSIS-Core | compiler abstraction macros |
@@ -86,6 +88,8 @@ The CMSIS files are vendored in [`cmsis/`](./cmsis/) so the build has no externa
 | `stm32l1xx.h` | ST CMSIS-Device | device selection entry point |
 | `stm32l151xb.h` | ST CMSIS-Device | STM32L151xB registers, structs, base addresses, bit masks |
 | `system_stm32l1xx.h` | ST CMSIS-Device | system clock declarations |
+
+</div>
 
 ## How it works
 

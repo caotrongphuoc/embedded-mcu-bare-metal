@@ -59,13 +59,17 @@ The Makefile picks up the HAL include path and the flag that tells the CMSIS dev
 
 The HAL sources are vendored in [`hal/`](./hal/), copied from ST's [`stm32l1xx_hal_driver`](https://github.com/STMicroelectronics/stm32l1xx_hal_driver) and [`cmsis_device_l1`](https://github.com/STMicroelectronics/cmsis_device_l1) repositories. Only five `.c` files are actually compiled - the minimum needed for this example:
 
+<div align="center">
+
 | File | Provides |
-|------|----------|
+|:----:|:--------:|
 | `stm32l1xx_hal.c` | `HAL_Init`, `HAL_Delay`, `HAL_IncTick`, `uwTick` |
 | `stm32l1xx_hal_rcc.c` | RCC setup called by `HAL_Init` |
 | `stm32l1xx_hal_gpio.c` | `HAL_GPIO_Init`, `HAL_GPIO_TogglePin` |
 | `stm32l1xx_hal_cortex.c` | `HAL_NVIC_SetPriority` called by `HAL_Init` |
 | `system_stm32l1xx.c` | `SystemCoreClock` (2 097 000 Hz, MSI default) |
+
+</div>
 
 Their headers - plus a handful pulled in transitively by the RCC code (`flash`, `pwr`, `Legacy/`) - are vendored next to them. `stm32l1xx_hal_conf.h` is ST's template with the 25 unused modules commented out so nothing else gets dragged in.
 
