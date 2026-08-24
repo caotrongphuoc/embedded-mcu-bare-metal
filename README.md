@@ -52,9 +52,9 @@ The result is the same across every example - this single clip shows what "it wo
 
 ## Topics
 
-### [`compiler/`](compiler/)
-
 <div align="center">
+
+### [`compiler/`](compiler/)
 
 | Folder | Concept |
 |:------:|:-------:|
@@ -62,9 +62,9 @@ The result is the same across every example - this single clip shows what "it wo
 
 </div>
 
-### [`arm-cortex-m/`](arm-cortex-m/)
-
 <div align="center">
+
+### [`arm-cortex-m/`](arm-cortex-m/)
 
 | Folder | Concept |
 |:------:|:-------:|
@@ -72,9 +72,9 @@ The result is the same across every example - this single clip shows what "it wo
 
 </div>
 
-### [`hal-pattern/`](hal-pattern/)
-
 <div align="center">
+
+### [`hal-pattern/`](hal-pattern/)
 
 | Folder | Concept |
 |:------:|:-------:|
