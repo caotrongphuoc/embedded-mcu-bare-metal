@@ -6,9 +6,13 @@ Everything here belongs to the CPU core itself, not the STM32 peripherals - port
 
 ## Subfolders
 
+<div align="center">
+
 | # | Folder | Topic |
-|---|--------|-------|
+|:-:|:------:|:-----:|
 | 00 | [`00-systick/`](00-systick/) | 1 ms SysTick tick and interrupt |
+
+</div>
 
 ## Before you start
 

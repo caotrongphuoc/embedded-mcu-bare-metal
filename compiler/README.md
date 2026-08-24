@@ -6,7 +6,11 @@ Covers what runs between reset and main(): vector table, stack setup, `.bss` zer
 
 ## Subfolders
 
+<div align="center">
+
 | # | Folder | Topic |
-|---|--------|-------|
+|:-:|:------:|:-----:|
 | 00 | [`00-startup-c/`](00-startup-c/) | Linker script and C `Reset_Handler` |
+
+</div>
 
