@@ -1,16 +1,14 @@
 # 03-hal-blocking - HAL layer
 
-Blink LED PB8 with SysTick timing.
+Blink LED PB8 with a 1 ms SysTick tick, same behavior as [`02-cmsis-device`](../02-cmsis-device/). Direct register writes are replaced by function calls into ST's HAL - the register writes still happen, just inside the HAL sources instead of in `led_blink.c`.
 
-This example keeps the same behavior as [`02-cmsis-device`](../02-cmsis-device/). Direct register access is replaced by HAL function calls from ST.
-
-No ST startup files.
+Still no ST startup files - reset handler and vector table are the same hand-written ones from earlier examples.
 
 Demo clip for every example lives in the [root README](../../README.md#demo).
 
-## Diff From 02-CMSIS-Device
+## What changed from 02-cmsis-device
 
-Clock enable, GPIO config, and SysTick setup are replaced by HAL calls:
+Clock enable, GPIO configuration, and SysTick setup all become HAL calls:
 
 ```diff
 -RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
@@ -27,9 +25,9 @@ Clock enable, GPIO config, and SysTick setup are replaced by HAL calls:
 +HAL_GPIO_Init(LED_PORT, &gpio_init);
 ```
 
-`LED_PIN` is now the bitmask `GPIO_PIN_8` (`1U << 8`), not the pin index.
+One thing worth watching: `LED_PIN` is no longer the pin index `8` - HAL takes the bitmask `GPIO_PIN_8` (`1U << 8`), so the constant is redefined accordingly.
 
-The main loop is replaced by `HAL_Delay`:
+The main loop drops the manual `g_tick` comparison and calls `HAL_Delay` instead:
 
 ```diff
 -uint32_t last_tick = g_tick;
@@ -48,18 +46,18 @@ The main loop is replaced by `HAL_Delay`:
 +}
 ```
 
-`SysTick_Handler` calls `HAL_IncTick` instead of `g_tick++`.
+`SysTick_Handler` also stops incrementing our own `g_tick` and calls `HAL_IncTick`, which advances HAL's internal counter (`uwTick`) instead.
 
-The Makefile adds the HAL include path and the HAL enable macro:
+The Makefile picks up the HAL include path and the flag that tells the CMSIS device header to expose HAL:
 
 ```diff
 -CFLAGS = ... -I./cmsis -DSTM32L151xB
 +CFLAGS = ... -I./cmsis -I./hal -DSTM32L151xB -DUSE_HAL_DRIVER
 ```
 
-## HAL Files
+## HAL files
 
-The HAL sources are vendored in [`hal/`](./hal/), copied from ST's [`stm32l1xx_hal_driver`](https://github.com/STMicroelectronics/stm32l1xx_hal_driver) and [`cmsis_device_l1`](https://github.com/STMicroelectronics/cmsis_device_l1) repositories. Five `.c` files are compiled:
+The HAL sources are vendored in [`hal/`](./hal/), copied from ST's [`stm32l1xx_hal_driver`](https://github.com/STMicroelectronics/stm32l1xx_hal_driver) and [`cmsis_device_l1`](https://github.com/STMicroelectronics/cmsis_device_l1) repositories. Only five `.c` files are actually compiled - the minimum needed for this example:
 
 | File | Provides |
 |------|----------|
@@ -69,17 +67,17 @@ The HAL sources are vendored in [`hal/`](./hal/), copied from ST's [`stm32l1xx_h
 | `stm32l1xx_hal_cortex.c` | `HAL_NVIC_SetPriority` called by `HAL_Init` |
 | `system_stm32l1xx.c` | `SystemCoreClock` (2 097 000 Hz, MSI default) |
 
-Their headers, plus a few included by the RCC code (`flash`, `pwr`, `Legacy/`), are vendored next to them. `stm32l1xx_hal_conf.h` is the ST template with 25 unused modules commented out.
+Their headers - plus a handful pulled in transitively by the RCC code (`flash`, `pwr`, `Legacy/`) - are vendored next to them. `stm32l1xx_hal_conf.h` is ST's template with the 25 unused modules commented out so nothing else gets dragged in.
 
-The CMSIS files under [`cmsis/`](./cmsis/) are the same as in `02-cmsis-device`.
+The CMSIS files under [`cmsis/`](./cmsis/) are exactly the same as in `02-cmsis-device`.
 
-## How It Works
+## How it works
 
-`HAL_Init` sets the NVIC priority group and calls `HAL_InitTick`, which programs SysTick for a 1 ms tick.
+`HAL_Init` sets the NVIC priority grouping and then calls `HAL_InitTick`, which programs SysTick for a 1 ms tick and enables its interrupt - same three registers that `SysTick_Config` wrote in the previous example, just wrapped in HAL.
 
-`SysTick_Handler` calls `HAL_IncTick`, which increments `uwTick` inside `stm32l1xx_hal.c`.
+Every 1 ms, `SysTick_Handler` runs and calls `HAL_IncTick`, which increments HAL's `uwTick` counter inside `stm32l1xx_hal.c`.
 
-`HAL_Delay(TICK_MS)` waits until `uwTick` has advanced `TICK_MS` ms.
+`HAL_Delay(TICK_MS)` reads `uwTick` in a loop and waits until it has advanced by `TICK_MS` milliseconds. That is what makes it a blocking call - the CPU spins in `HAL_Delay` for the full 100 ms and cannot do anything else. [`04-hal-nonblocking/`](../04-hal-nonblocking/) is the next step, which keeps the same tick source but replaces the blocking wait with a `HAL_GetTick` comparison so the loop is free to do other work.
 
 ## Build / Flash / Debug
 
@@ -88,7 +86,3 @@ make
 make flash
 make debug
 ```
-
-## Meaning
-
-HAL replaces direct register access with function calls. The register writes still happen inside the HAL functions.
