@@ -1,9 +1,9 @@
-NAME_MODULE		= led_blink
-OBJECTS_DIR 	= build_$(NAME_MODULE)
+NAME_MODULE = led_blink
+OBJECTS_DIR = build_$(NAME_MODULE)
 
-GCC_PATH       = $(HOME)/Workspace/Tools/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10
-PROGRAMER_PATH = $(HOME)/Workspace/Tools/STM32CubeProgrammer/bin
-OPENOCD_CFG_PATH	= /usr/share/openocd/scripts/board/stm32ldiscovery.cfg
+GCC_PATH         = $(HOME)/Workspace/Tools/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux/gcc-arm-none-eabi-10.3-2021.10
+PROGRAMER_PATH   = $(HOME)/Workspace/Tools/STM32CubeProgrammer/bin
+OPENOCD_CFG_PATH = /usr/share/openocd/scripts/board/stm32ldiscovery.cfg
 
 APP_START_ADDR = 0x08000000
 
