@@ -1,16 +1,14 @@
 # 02-cmsis-device - CMSIS device headers
 
-Blink LED PB8 with SysTick timing.
+Blink LED PB8 with a 1 ms SysTick tick, same behavior as [`01-register-struct`](../01-register-struct/). The hand-written peripheral structs are replaced by CMSIS headers from ARM (core) and ST (device), which define the same kind of structs for the entire chip.
 
-This example keeps the same behavior as [`01-register-struct`](../01-register-struct/). The hand-written peripheral structs are replaced by CMSIS headers from ARM and ST.
-
-No HAL. No ST startup files.
+Still no HAL, no ST startup files - only the register declarations move from `led_blink.h` into vendor headers.
 
 Demo clip for every example lives in the [root README](../../README.md#demo).
 
-## Diff From 01-Register-Struct
+## What changed from 01-register-struct
 
-The hand-written register structs and base pointers are replaced by one include:
+All the hand-written register structs and base pointers collapse into a single include:
 
 ```diff
 -typedef struct
@@ -49,14 +47,14 @@ The hand-written register structs and base pointers are replaced by one include:
 +#include "stm32l1xx.h"
 ```
 
-The GPIOB clock bit uses a CMSIS device macro:
+The raw shift for the GPIOB clock bit becomes a named macro from the device header, which reads much closer to the reference manual:
 
 ```diff
 -RCC->AHBENR |= (1U << 1);
 +RCC->AHBENR |= RCC_AHBENR_GPIOBEN;
 ```
 
-SysTick setup uses a CMSIS-Core helper:
+And the SysTick setup is replaced by a CMSIS-Core helper that programs `RVR`, `CVR`, and `CSR` in one call:
 
 ```diff
 -SysTick->SYST_RVR = (SYSCLK_HZ / TICK_HZ) - 1U;
@@ -65,20 +63,18 @@ SysTick setup uses a CMSIS-Core helper:
 +SysTick_Config(SYSCLK_HZ / TICK_HZ);
 ```
 
-The Makefile adds the CMSIS include path and target chip macro:
+Two new bits go into the Makefile so the compiler can find the headers and pick the right device:
 
 ```diff
 -CFLAGS = -mcpu=cortex-m3 -mthumb ... -DAPP_START_ADDR=$(APP_START_ADDR)
 +CFLAGS = -mcpu=cortex-m3 -mthumb ... -DAPP_START_ADDR=$(APP_START_ADDR) -I./cmsis -DSTM32L151xB
 ```
 
-`-I./cmsis` tells the compiler where the vendored headers are.
+`-I./cmsis` points the compiler at the vendored headers, and `-DSTM32L151xB` tells `stm32l1xx.h` which STM32L1 device header to pull in.
 
-`-DSTM32L151xB` tells `stm32l1xx.h` which STM32L1 device header to include.
+## CMSIS files
 
-## CMSIS Files
-
-The CMSIS files are vendored in [`cmsis/`](./cmsis/).
+The CMSIS files are vendored in [`cmsis/`](./cmsis/) so the build has no external dependency.
 
 | File | Source | Provides |
 |------|--------|----------|
@@ -91,23 +87,11 @@ The CMSIS files are vendored in [`cmsis/`](./cmsis/).
 | `stm32l151xb.h` | ST CMSIS-Device | STM32L151xB registers, structs, base addresses, bit masks |
 | `system_stm32l1xx.h` | ST CMSIS-Device | system clock declarations |
 
-## How It Works
+## How it works
 
-`stm32l1xx.h` reads the `STM32L151xB` macro from the Makefile.
+`stm32l1xx.h` reads the `STM32L151xB` macro from the Makefile and uses it to include `stm32l151xb.h`. That header defines the same kind of register structs used in `01-register-struct`, but for the full chip - so `GPIOB->MODER`, `RCC->AHBENR`, and named bit masks like `RCC_AHBENR_GPIOBEN` all come from there.
 
-That selects `stm32l151xb.h`.
-
-`stm32l151xb.h` defines the same kind of register structs used in `01-register-struct`, but for the full chip.
-
-Examples:
-
-```c
-GPIOB->MODER
-RCC->AHBENR
-RCC_AHBENR_GPIOBEN
-```
-
-`core_cm3.h` provides Cortex-M3 core definitions such as `SysTick` and `SysTick_Config()`.
+The Cortex-M3 core side - `SysTick` and `SysTick_Config()` - comes from `core_cm3.h`.
 
 ## Build / Flash / Debug
 
@@ -117,10 +101,4 @@ make flash
 make debug
 ```
 
-## Meaning
-
-CMSIS replaces the hand-written register declarations.
-
-The code still writes registers directly. There is no HAL layer here.
-
-The difference is that register structs, base addresses, and bit masks now come from the vendor headers instead of `led_blink.h`.
+CMSIS only replaces the hand-written register declarations; the code still writes registers directly and there is no HAL layer yet. The difference is that the structs, base addresses, and bit masks now come from vendor headers, which makes the code portable to any STM32L1 device by changing only the `-D` macro.

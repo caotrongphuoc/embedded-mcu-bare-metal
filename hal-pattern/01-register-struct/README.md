@@ -1,16 +1,14 @@
 # 01-register-struct - Register access with `typedef struct`
 
-Blink LED PB8 with SysTick timing (1 ms tick).
+Blink LED PB8 with a 1 ms SysTick tick. Same behavior as [`arm-cortex-m/00-systick/`](../../arm-cortex-m/00-systick/) and [`00-register-macro/`](../00-register-macro/); the only thing that changes is how the registers are declared.
 
-Register access groups registers by peripheral into a `typedef struct`, then maps the peripheral base address to a pointer of that struct type.
-
-Same behavior as [`arm-cortex-m/00-systick/`](../../arm-cortex-m/00-systick/) and [`00-register-macro/`](../00-register-macro/). The difference is only in how registers are declared and used.
+Instead of one `#define` per register, the registers belonging to a peripheral are collected into a `typedef struct` that mirrors the peripheral's memory layout, and the base address is cast once to a pointer of that struct type.
 
 Demo clip for every example lives in the [root README](../../README.md#demo).
 
 ## Register declarations
 
-One struct per peripheral, fields in the exact order of the RM0038 offsets:
+The struct fields are listed in the exact order of the RM0038 offsets - the layout of the struct has to match the layout of the peripheral in memory:
 
 ```c
 typedef struct
@@ -24,7 +22,7 @@ typedef struct
 } GPIO_TypeDef;
 ```
 
-Then map the base address to a pointer of that struct type:
+Then the base address is turned into a pointer to that struct:
 
 ```c
 #define GPIOB ((GPIO_TypeDef*)0x40020400UL)
@@ -32,13 +30,15 @@ Then map the base address to a pointer of that struct type:
 
 ## Access
 
+Registers are reached through the base pointer, so the base address only appears once:
+
 ```c
 RCC->AHBENR |= (1U << 1);
 GPIOB->MODER |= (1U << (LED_PIN * 2));
 GPIOB->ODR ^= (1U << LED_PIN);
 ```
 
-The compiler computes `GPIOB->ODR` as `base + offsetof(GPIO_TypeDef, ODR)` = `0x40020400 + 0x14` = `0x40020414` - the same address as `00-register-macro`.
+`GPIOB->ODR` compiles to `base + offsetof(GPIO_TypeDef, ODR)` = `0x40020400 + 0x14` = `0x40020414` - the same final address as the `#define` in `00-register-macro`, but computed by the compiler from the struct layout.
 
 ## Build / Flash / Debug
 
@@ -48,10 +48,4 @@ make flash
 make debug
 ```
 
-## Meaning
-
-The struct captures the memory layout of the peripheral once. Every register on that peripheral is a field on the same base pointer.
-
-Same pattern used by CMSIS device headers - see [`02-cmsis-device/`](../02-cmsis-device/), where these hand-written structs are replaced by ST's `stm32l151xb.h`.
-
-Compare with [`00-register-macro/`](../00-register-macro/), which declares each register as a separate `#define` at a hard-coded address.
+The struct captures the memory layout of a peripheral once, and every register on that peripheral becomes a field on the same base pointer. This is exactly the pattern the CMSIS device headers use - [`02-cmsis-device/`](../02-cmsis-device/) replaces these hand-written structs with ST's `stm32l151xb.h`, which does the same thing for the whole chip. Compare with [`00-register-macro/`](../00-register-macro/), where each register is a separate `#define` at a hard-coded address.
