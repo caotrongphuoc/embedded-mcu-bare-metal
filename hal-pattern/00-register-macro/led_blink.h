@@ -8,9 +8,9 @@
  * GPIOB base = 0x40020400   -> MODER  at offset 0x00 -> 0x40020400 (RM0038 7.4.1)
  *                              ODR    at offset 0x14 -> 0x40020414 (RM0038 7.4.6)
  */
-#define RCC_AHBENR (*(volatile uint32_t*)0x4002381C)
+#define RCC_AHBENR  (*(volatile uint32_t*)0x4002381C)
 #define GPIOB_MODER (*(volatile uint32_t*)0x40020400)
-#define GPIOB_ODR (*(volatile uint32_t*)0x40020414)
+#define GPIOB_ODR   (*(volatile uint32_t*)0x40020414)
 
 /*
  * Cortex-M3 SysTick registers (ARMv7-M B3.3.2)
@@ -27,6 +27,6 @@
 
 // System clock and tick configuration
 #define SYSCLK_HZ 2097000U
-#define TICK_HZ 1000U
+#define TICK_HZ   1000U
 
 #endif // __LED_BLINK_H__
