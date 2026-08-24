@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 /*
- * GPIO register block (layout from RM0038 8.4)
+ * GPIO register block (layout from RM0038 7.4)
  * Base + field offset gives the address; the compiler does the arithmetic.
  * GPIOB base = 0x40020400
  *   MODER  -> 0x40020400 + 0x00
@@ -21,7 +21,7 @@ typedef struct
 } GPIO_TypeDef;
 
 /*
- * RCC register block (layout from RM0038 6.3)
+ * RCC register block (layout from RM0038 6.3.8)
  * RCC base = 0x40023800 -> AHBENR at offset 0x1C
  */
 typedef struct
