@@ -1,10 +1,9 @@
 # Renesas SDK patterns
 
-This section studies SDK and HAL patterns used by Renesas microcontrollers.
+This section studies the source patterns used by Renesas MCU software packages.
 
-## MCU studies
+## SDK studies
 
-| MCU | SDK | Study |
+| SDK | Reference MCU | Study |
 |:---|:---|:---|
-| RA0E3 | Flexible Software Package | [`ra0e3/`](ra0e3/) |
-
+| Flexible Software Package | RA0E3 | [`fsp/`](fsp/) |

@@ -1,9 +1,9 @@
 # Raspberry Pi SDK patterns
 
-This section studies SDK and HAL patterns used by Raspberry Pi microcontrollers.
+This section studies the source patterns used by Raspberry Pi microcontroller SDKs.
 
-## MCU studies
+## SDK studies
 
-| MCU | SDK | Study |
+| SDK | Reference MCU | Study |
 |:---|:---|:---|
-| RP2040 | Pico SDK | [`rp2040/`](rp2040/) |
+| Pico SDK | RP2040 | [`pico-sdk/`](pico-sdk/) |
