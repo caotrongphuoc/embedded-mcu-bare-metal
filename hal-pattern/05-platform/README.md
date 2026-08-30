@@ -15,7 +15,7 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 ### II. Repo Layout
 
 ```text
-05-hal/
+05-platform/
 ├── Makefile                         # build selected example and target
 ├── README.md                        # project overview and porting notes
 ├── cmsis/                           # Cortex M and MCU register definitions
