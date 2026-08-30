@@ -87,6 +87,14 @@ typedef struct st_hal_gpio_api
                             hal_gpio_size_t         mask);
 } hal_gpio_api_t;
 
+/** GPIO instance. */
+typedef struct st_hal_gpio_instance
+{
+    hal_gpio_ctrl_t      * p_ctrl;
+    hal_gpio_cfg_t const * p_cfg;
+    hal_gpio_api_t const * p_api;
+} hal_gpio_instance_t;
+
 HAL_FOOTER
 
 #endif // __HAL_GPIO_API_H__
