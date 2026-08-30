@@ -48,6 +48,45 @@ typedef struct st_hal_gpio_cfg
 /** GPIO control block. */
 typedef void hal_gpio_ctrl_t;
 
+/** GPIO functions implemented at the HAL layer. */
+typedef struct st_hal_gpio_api
+{
+    /** Open the GPIO driver and apply the initial pin configuration. */
+    hal_err_t (* open)(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_cfg_t const * p_cfg);
+
+    /** Close the GPIO driver. */
+    hal_err_t (* close)(hal_gpio_ctrl_t * const p_ctrl);
+
+    /** Configure multiple pins. */
+    hal_err_t (* pinsCfg)(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_cfg_t const * p_cfg);
+
+    /** Configure one pin. */
+    hal_err_t (* pinCfg)(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_pin_t pin, uint32_t cfg);
+
+    /** Read one pin. */
+    hal_err_t (* pinRead)(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_pin_t pin, hal_gpio_level_t * p_pin_value);
+
+    /** Write one pin. */
+    hal_err_t (* pinWrite)(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_pin_t pin, hal_gpio_level_t level);
+
+    /** Set the direction of selected pins on a port. */
+    hal_err_t (* portDirectionSet)(hal_gpio_ctrl_t * const p_ctrl,
+                                   hal_gpio_port_t         port,
+                                   hal_gpio_size_t         direction_values,
+                                   hal_gpio_size_t         mask);
+
+    /** Read a port. */
+    hal_err_t (* portRead)(hal_gpio_ctrl_t * const p_ctrl,
+                           hal_gpio_port_t         port,
+                           hal_gpio_size_t       * p_port_value);
+
+    /** Write selected pins on a port. */
+    hal_err_t (* portWrite)(hal_gpio_ctrl_t * const p_ctrl,
+                            hal_gpio_port_t         port,
+                            hal_gpio_size_t         value,
+                            hal_gpio_size_t         mask);
+} hal_gpio_api_t;
+
 HAL_FOOTER
 
 #endif // __HAL_GPIO_API_H__
