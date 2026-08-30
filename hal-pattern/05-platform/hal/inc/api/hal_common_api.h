@@ -1,5 +1,5 @@
-#ifndef HAL_COMMON_API_H
-#define HAL_COMMON_API_H
+#ifndef __HAL_COMMON_API_H__
+#define __HAL_COMMON_API_H__
 
 #ifdef __cplusplus
 #define HAL_HEADER    extern "C" {
@@ -35,4 +35,4 @@ typedef enum e_hal_err
 
 HAL_FOOTER
 
-#endif /* HAL_COMMON_API_H */
+#endif // __HAL_COMMON_API_H__
