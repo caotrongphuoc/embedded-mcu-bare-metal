@@ -61,9 +61,6 @@ The first example uses GPIO and the system tick to blink the LED. Another periph
 
 ### V. References
 
-1. [FSP Architecture](https://renesas.github.io/fsp/_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html): interface data structures, instances, API conventions, build time configuration, and file structure.
-2. [FSP API Headers](https://github.com/renesas/fsp/tree/master/ra/fsp/inc/api): shared peripheral interface headers.
-3. [FSP Instance Headers](https://github.com/renesas/fsp/tree/master/ra/fsp/inc/instances): implementation specific types and API declarations.
-4. [FSP Peripheral Modules](https://github.com/renesas/fsp/tree/master/ra/fsp/src): one source directory for each peripheral implementation.
-5. [FSP Board Support Package](https://github.com/renesas/fsp/tree/master/ra/fsp/src/bsp): MCU startup, clock, interrupt, and board support source.
-6. [AK Kit I/O Configuration](https://github.com/the-ak-foundation/ak-base-kit-stm32l151/blob/main/application/sources/platform/stm32l/io_cfg.h): STM32L151 pin and peripheral assignments for the board.
+1. [Renesas RA0E3](https://www.renesas.com/en/products/ra0e3): MCU overview and technical documents.
+2. [FSP Architecture](https://renesas.github.io/fsp/_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html): interfaces, instances, API conventions, build time configuration, and file structure.
+3. [FSP Support for RA0E3](https://renesas.github.io/fsp/group___b_s_p___m_c_u___r_a0_e3.html): BSP configuration and peripheral modules supported by RA0E3.
