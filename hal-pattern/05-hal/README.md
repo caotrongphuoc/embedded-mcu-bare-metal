@@ -2,74 +2,52 @@
 
 ## Introduction
 
-This example develops a reusable Hardware Abstraction Layer for MCU platforms. STM32L151 and the AK Embedded Base Kit are used for the first implementation and hardware test.
+This project develops a reusable Hardware Abstraction Layer for MCU platforms. STM32L151 and the AK Embedded Base Kit are the first target used to build and test it.
 
-The HAL interface does not depend on a specific MCU or board. A new target supplies its own peripheral implementation, board support, and configuration.
+The interfaces are kept independent from the MCU and board. Porting to another target requires a peripheral implementation, board support, and target configuration.
 
-### I. Source Structure
+### I. Design
+
+Each peripheral is defined by an API, configuration data, runtime control data, and an instance that connects them. Application and device driver code use the API without accessing MCU registers.
+
+CMSIS provides the STM32L151 register definitions. The HAL source owns the peripheral logic above those definitions.
+
+### II. Repo Layout
 
 ```text
 05-hal/
-    app/
-    cmsis/
-    driver/
-    examples/
-
-    hal/
-        inc/
-            api/
-            instances/
-        src/
-            bsp/
-                mcu/
-                    stm32l1/
-                board/
-                    ak_base_kit/
-            stm32l1_gpio/
-            stm32l1_time/
-            stm32l1_wdt/
-
-    hal_cfg/
-        bsp/
-        driver/
-
-    hal_gen/
+├── Makefile                         # build selected example and target
+├── README.md                        # project overview and porting notes
+├── cmsis/                           # Cortex M and MCU register definitions
+├── driver/                          # LED, button, display and external devices
+├── examples/
+│   └── led-blink/                   # first hardware test
+├── hal/
+│   ├── inc/
+│   │   ├── api/                     # interfaces shared by all MCUs
+│   │   └── instances/               # available MCU implementations
+│   └── src/
+│       ├── bsp/
+│       │   ├── mcu/
+│       │   │   └── stm32l1/         # startup, clock, interrupt and memory
+│       │   └── board/
+│       │       └── ak_base_kit/     # board pins and peripheral assignments
+│       ├── stm32l1_gpio/            # STM32L1 GPIO implementation
+│       ├── stm32l1_time/            # STM32L1 system tick implementation
+│       └── stm32l1_wdt/             # STM32L1 watchdog implementation
+├── hal_cfg/
+│   ├── bsp/                          # target build options
+│   └── driver/                       # peripheral module options
+└── hal_gen/                          # control, configuration and instances
 ```
 
-### II. Source Directories
-
-`app` contains the application entry point.
-
-`cmsis` contains Cortex M core headers and MCU register definitions.
-
-`driver` contains drivers for devices outside the MCU, such as LEDs, buttons, displays, and external flash.
-
-`examples` contains small programs used to test each HAL module.
-
-`hal/inc/api` contains interfaces shared by all MCU implementations.
-
-`hal/inc/instances` declares the implementations available for those interfaces.
-
-`hal/src` contains peripheral implementations and Board Support Packages.
-
-`hal_cfg` contains build time options for the selected target.
-
-`hal_gen` contains control, configuration, instance, and pin data for the selected board. These files are written by hand.
+Folders are added with their first working module. The repository does not keep empty source placeholders.
 
 ### III. Board Bring Up
 
-For a new board using STM32L151, add its board support files and provide its instance and pin configuration in `hal_gen`. The STM32L1 peripheral implementation remains unchanged.
+A board using STM32L151 needs a board directory under `hal/src/bsp/board` and its pin and instance data in `hal_gen`. The STM32L1 peripheral source remains unchanged.
 
-For a board using another MCU, provide:
-
-1. MCU register definitions
-2. MCU Board Support Package
-3. Peripheral implementations
-4. Linker and startup configuration
-5. Board Support Package
-6. Instance and pin configuration
-
-The application and device drivers can be reused when the new target implements the required HAL interfaces.
+A board using another MCU also needs register definitions, an MCU BSP, peripheral implementations, startup code, and a linker configuration. Existing applications and device drivers can be reused when the new target provides the required interfaces.
 
 ### IV. First Target
 
@@ -79,7 +57,7 @@ Board  : AK Embedded Base Kit
 LED    : PB8
 ```
 
-The first example uses GPIO and a system tick to blink the LED. Other modules are added with an example that can be built and tested.
+The first example uses GPIO and the system tick to blink the LED. Another peripheral is added only with an example that can be built and tested.
 
 ### V. References
 
