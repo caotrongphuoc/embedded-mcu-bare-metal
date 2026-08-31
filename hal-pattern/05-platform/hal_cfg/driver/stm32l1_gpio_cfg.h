@@ -1,0 +1,6 @@
+#ifndef __STM32L1_GPIO_CFG_H__
+#define __STM32L1_GPIO_CFG_H__
+
+#define STM32L1_GPIO_CFG_PARAM_CHECKING_ENABLE    (1)
+
+#endif // __STM32L1_GPIO_CFG_H__

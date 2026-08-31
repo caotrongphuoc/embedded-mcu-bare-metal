@@ -2,6 +2,9 @@
 #define __STM32L1_GPIO_H__
 
 #include "hal_gpio_api.h"
+#if __has_include("stm32l1_gpio_cfg.h")
+#include "stm32l1_gpio_cfg.h"
+#endif
 
 HAL_HEADER
 

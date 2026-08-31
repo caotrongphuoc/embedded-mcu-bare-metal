@@ -1,6 +1,8 @@
 #ifndef __HAL_COMMON_API_H__
 #define __HAL_COMMON_API_H__
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 #define HAL_HEADER    extern "C" {
 #define HAL_FOOTER    }
@@ -10,6 +12,20 @@
 #endif
 
 #define HAL_PARAMETER_NOT_USED(p)    ((void) (p))
+
+#define HAL_ERROR_RETURN(a, err)                        \
+    {                                                   \
+        if ((a))                                        \
+        {                                               \
+            (void) 0;                                   \
+        }                                               \
+        else                                            \
+        {                                               \
+            return err;                                 \
+        }                                               \
+    }
+
+#define HAL_ASSERT(a)    HAL_ERROR_RETURN((a), HAL_ERR_ASSERTION)
 
 HAL_HEADER
 
