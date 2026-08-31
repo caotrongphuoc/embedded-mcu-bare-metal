@@ -31,7 +31,7 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 │   └── src/
 │       ├── bsp/
 │       │   ├── mcu/
-│       │   │   └── stm32l1/         # startup, clock, interrupt and memory
+│       │   │   └── stm32l1/         # clock, startup, interrupt and memory
 │       └── mcu/
 │           └── stm32l1/             # STM32L1 peripheral implementations
 │               ├── gpio/
