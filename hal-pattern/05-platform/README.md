@@ -40,7 +40,9 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 ├── hal_cfg/
 │   ├── bsp/                          # target build options
 │   └── driver/                       # peripheral module options
-└── hal_gen/                          # control, configuration and instances
+├── hal_gen/                          # control, configuration and instances
+└── script/
+    └── stm32l151cbtx_flash.ld        # STM32L151CB Flash and RAM layout
 ```
 
 Folders are added with their first working module. The repository does not keep empty source placeholders.
