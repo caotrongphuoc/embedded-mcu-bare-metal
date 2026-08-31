@@ -19,7 +19,7 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 ├── Makefile                         # build selected example and target
 ├── README.md                        # project overview and porting notes
 ├── board/
-│   └── ak_base_kit/                 # board initialization and LEDs
+│   └── ak_base_kit/                 # board initialization and devices
 ├── cmsis/                           # Cortex M and MCU register definitions
 ├── driver/                          # LED, button, display and external devices
 ├── examples/
