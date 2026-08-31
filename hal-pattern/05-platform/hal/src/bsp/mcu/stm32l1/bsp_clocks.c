@@ -21,7 +21,50 @@
 #error "STM32L151 system clock exceeds 32 MHz"
 #endif
 
+#if BSP_CFG_CLOCK_SOURCE != BSP_CLOCKS_SOURCE_CLOCK_PLL
+#error "Only PLL system clock is supported"
+#endif
+
+#if BSP_CFG_PLL_SOURCE == BSP_CLOCKS_SOURCE_CLOCK_HSE
+#define BSP_PRV_PLL_SOURCE RCC_CFGR_PLLSRC_HSE
+#else
+#error "Unsupported PLL clock source"
+#endif
+
+#if BSP_CFG_PLL_MUL == 3
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL3
+#elif BSP_CFG_PLL_MUL == 4
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL4
+#elif BSP_CFG_PLL_MUL == 6
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL6
+#elif BSP_CFG_PLL_MUL == 8
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL8
+#elif BSP_CFG_PLL_MUL == 12
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL12
+#elif BSP_CFG_PLL_MUL == 16
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL16
+#elif BSP_CFG_PLL_MUL == 24
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL24
+#elif BSP_CFG_PLL_MUL == 32
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL32
+#elif BSP_CFG_PLL_MUL == 48
+#define BSP_PRV_PLL_MUL RCC_CFGR_PLLMUL48
+#else
+#error "Unsupported PLL multiplier"
+#endif
+
+#if BSP_CFG_PLL_DIV == 2
+#define BSP_PRV_PLL_DIV RCC_CFGR_PLLDIV2
+#elif BSP_CFG_PLL_DIV == 3
+#define BSP_PRV_PLL_DIV RCC_CFGR_PLLDIV3
+#elif BSP_CFG_PLL_DIV == 4
+#define BSP_PRV_PLL_DIV RCC_CFGR_PLLDIV4
+#else
+#error "Unsupported PLL divider"
+#endif
+
 #define BSP_PRV_FLASH_ZERO_WAIT_STATE_MAX_HZ (16000000)
+#define BSP_PRV_PLL_CFG                      (BSP_PRV_PLL_SOURCE | BSP_PRV_PLL_MUL | BSP_PRV_PLL_DIV)
 
 static void bsp_clock_set_prechange(uint32_t requested_freq_hz);
 
@@ -30,6 +73,19 @@ void bsp_clock_init(void)
 {
 	SystemInit();
 	bsp_clock_set_prechange(BSP_CFG_SYSCLK_HZ);
+
+	RCC->CR &= ~RCC_CR_HSEBYP;
+	RCC->CR |= RCC_CR_HSEON;
+	while (!(RCC->CR & RCC_CR_HSERDY))
+	{
+	}
+
+	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL | RCC_CFGR_PLLDIV)) | BSP_PRV_PLL_CFG;
+	RCC->CR |= RCC_CR_PLLON;
+	while (!(RCC->CR & RCC_CR_PLLRDY))
+	{
+	}
+
 	SystemCoreClockUpdate();
 }
 
