@@ -25,16 +25,18 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 ├── hal/
 │   ├── inc/
 │   │   ├── api/                     # interfaces shared by all MCUs
-│   │   └── instances/               # available MCU implementations
+│   │   └── instances/               # peripheral instances used by applications
 │   └── src/
 │       ├── bsp/
 │       │   ├── mcu/
 │       │   │   └── stm32l1/         # startup, clock, interrupt and memory
 │       │   └── board/
 │       │       └── ak_base_kit/     # board pins and peripheral assignments
-│       ├── stm32l1_gpio/            # STM32L1 GPIO implementation
-│       ├── stm32l1_time/            # STM32L1 system tick implementation
-│       └── stm32l1_wdt/             # STM32L1 watchdog implementation
+│       └── mcu/
+│           └── stm32l1/             # STM32L1 peripheral implementations
+│               ├── gpio/
+│               ├── time/
+│               └── wdt/
 ├── hal_cfg/
 │   ├── bsp/                          # target build options
 │   └── driver/                       # peripheral module options
@@ -45,9 +47,9 @@ Folders are added with their first working module. The repository does not keep 
 
 ### III. Board Bring Up
 
-A board using STM32L151 needs a board directory under `hal/src/bsp/board` and its pin and instance data in `hal_gen`. The STM32L1 peripheral source remains unchanged.
+A board using STM32L151 needs a board directory under `hal/src/bsp/board` and its pin and instance data in `hal_gen`. It reuses the peripheral implementations under `hal/src/mcu/stm32l1`.
 
-A board using another MCU also needs register definitions, an MCU BSP, peripheral implementations, startup code, and a linker configuration. Existing applications and device drivers can be reused when the new target provides the required interfaces.
+A board using another MCU needs register definitions, an MCU BSP under `hal/src/bsp/mcu`, and peripheral implementations under `hal/src/mcu`. Existing applications and device drivers remain unchanged when the new target provides the same APIs.
 
 ### IV. First Target
 
