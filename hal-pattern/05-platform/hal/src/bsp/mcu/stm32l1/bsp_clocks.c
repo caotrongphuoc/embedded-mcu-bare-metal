@@ -63,8 +63,59 @@
 #error "Unsupported PLL divider"
 #endif
 
+#if BSP_CFG_HCLK_DIV == 1
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV1
+#elif BSP_CFG_HCLK_DIV == 2
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV2
+#elif BSP_CFG_HCLK_DIV == 4
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV4
+#elif BSP_CFG_HCLK_DIV == 8
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV8
+#elif BSP_CFG_HCLK_DIV == 16
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV16
+#elif BSP_CFG_HCLK_DIV == 64
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV64
+#elif BSP_CFG_HCLK_DIV == 128
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV128
+#elif BSP_CFG_HCLK_DIV == 256
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV256
+#elif BSP_CFG_HCLK_DIV == 512
+#define BSP_PRV_HCLK_DIV RCC_CFGR_HPRE_DIV512
+#else
+#error "Unsupported HCLK divider"
+#endif
+
+#if BSP_CFG_PCLK1_DIV == 1
+#define BSP_PRV_PCLK1_DIV RCC_CFGR_PPRE1_DIV1
+#elif BSP_CFG_PCLK1_DIV == 2
+#define BSP_PRV_PCLK1_DIV RCC_CFGR_PPRE1_DIV2
+#elif BSP_CFG_PCLK1_DIV == 4
+#define BSP_PRV_PCLK1_DIV RCC_CFGR_PPRE1_DIV4
+#elif BSP_CFG_PCLK1_DIV == 8
+#define BSP_PRV_PCLK1_DIV RCC_CFGR_PPRE1_DIV8
+#elif BSP_CFG_PCLK1_DIV == 16
+#define BSP_PRV_PCLK1_DIV RCC_CFGR_PPRE1_DIV16
+#else
+#error "Unsupported PCLK1 divider"
+#endif
+
+#if BSP_CFG_PCLK2_DIV == 1
+#define BSP_PRV_PCLK2_DIV RCC_CFGR_PPRE2_DIV1
+#elif BSP_CFG_PCLK2_DIV == 2
+#define BSP_PRV_PCLK2_DIV RCC_CFGR_PPRE2_DIV2
+#elif BSP_CFG_PCLK2_DIV == 4
+#define BSP_PRV_PCLK2_DIV RCC_CFGR_PPRE2_DIV4
+#elif BSP_CFG_PCLK2_DIV == 8
+#define BSP_PRV_PCLK2_DIV RCC_CFGR_PPRE2_DIV8
+#elif BSP_CFG_PCLK2_DIV == 16
+#define BSP_PRV_PCLK2_DIV RCC_CFGR_PPRE2_DIV16
+#else
+#error "Unsupported PCLK2 divider"
+#endif
+
 #define BSP_PRV_FLASH_ZERO_WAIT_STATE_MAX_HZ (16000000)
 #define BSP_PRV_PLL_CFG                      (BSP_PRV_PLL_SOURCE | BSP_PRV_PLL_MUL | BSP_PRV_PLL_DIV)
+#define BSP_PRV_CLOCK_DIV_CFG                (BSP_PRV_HCLK_DIV | BSP_PRV_PCLK1_DIV | BSP_PRV_PCLK2_DIV)
 
 static void bsp_clock_set_prechange(uint32_t requested_freq_hz);
 
@@ -86,7 +137,16 @@ void bsp_clock_init(void)
 	{
 	}
 
+	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)) | BSP_PRV_CLOCK_DIV_CFG;
+	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | RCC_CFGR_SW_PLL;
+	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
+	{
+	}
+
 	SystemCoreClockUpdate();
+	while (SystemCoreClock != (BSP_CFG_SYSCLK_HZ / BSP_CFG_HCLK_DIV))
+	{
+	}
 }
 
 /** Prepares power and flash settings before the system clock is changed. */
