@@ -3,7 +3,7 @@
 
 #if defined(BOARD_AK_BASE_KIT)
 
-static const hal_gpio_pin_t g_bsp_prv_leds[] =
+static uint16_t g_bsp_prv_leds[] =
 {
     AK_BASE_KIT_LED_PIN
 };
