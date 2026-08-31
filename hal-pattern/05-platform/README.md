@@ -18,6 +18,8 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 05-platform/
 ├── Makefile                         # build selected example and target
 ├── README.md                        # project overview and porting notes
+├── board/
+│   └── ak_base_kit/                 # board initialization and LEDs
 ├── cmsis/                           # Cortex M and MCU register definitions
 ├── driver/                          # LED, button, display and external devices
 ├── examples/
@@ -30,8 +32,6 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 │       ├── bsp/
 │       │   ├── mcu/
 │       │   │   └── stm32l1/         # startup, clock, interrupt and memory
-│       │   └── board/
-│       │       └── ak_base_kit/     # board pins and peripheral assignments
 │       └── mcu/
 │           └── stm32l1/             # STM32L1 peripheral implementations
 │               ├── gpio/
@@ -47,7 +47,7 @@ Folders are added with their first working module. The repository does not keep 
 
 ### III. Board Bring Up
 
-A board using STM32L151 needs a board directory under `hal/src/bsp/board` and its pin and instance data in `hal_gen`. It reuses the peripheral implementations under `hal/src/mcu/stm32l1`.
+A board using STM32L151 needs a board directory under `board` and its pin and instance data in `hal_gen`. It reuses the peripheral implementations under `hal/src/mcu/stm32l1`.
 
 A board using another MCU needs register definitions, an MCU BSP under `hal/src/bsp/mcu`, and peripheral implementations under `hal/src/mcu`. Existing applications and device drivers remain unchanged when the new target provides the same APIs.
 
