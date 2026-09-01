@@ -1,23 +1,17 @@
-# HAL for MCU Platforms
+# 05-platform - The HAL project
 
-## Introduction
+This is the HAL. Folders 00 to 04 walked through the driver-access techniques on the same LED blink. Here we stop iterating on one file and start building the real thing: a layered HAL project with an API per peripheral, one instance driver per MCU peripheral, a BSP layer, and per-project config. LED blink is its first working module. Every new peripheral (UART, ADC, and so on) will come as a new example under `examples/`.
 
-This project builds a reusable Hardware Abstraction Layer for MCU platforms. STM32L151 on the AK Embedded Base Kit is the first target used to write and test it.
+The application code (`hal_entry.c`) does not depend on the MCU. Porting to a new chip is done by adding a new instance driver and binding it in `hal_data.c`; the application stays the same.
 
-The HAL uses a layered platform layout: one API per peripheral, one instance driver folder per MCU peripheral, a BSP layer for chip and board init, and per-project config headers. The interfaces do not depend on the MCU or the board. Porting to another target needs a peripheral implementation, board support, and target configuration.
+Demo clip for every learning example lives in the [root README](../../README.md#demo). The HAL project builds a real firmware and behaves the same way when it runs.
 
-### I. Design
-
-Each peripheral has an API, configuration data, runtime control data, and an instance that connects them. Application and device driver code calls the API vtable. It does not touch MCU registers.
-
-CMSIS provides the STM32L151 register definitions. The HAL source owns the peripheral logic above those definitions.
-
-### II. Repo Layout
+## Layout
 
 ```text
 05-platform/
 ├── Makefile                             # build one example and target
-├── README.md                            # project overview and porting notes
+├── README.md
 ├── board/
 │   └── ak_base_kit/                     # board init, LED table, board.h
 ├── cmsis/                               # Cortex M and MCU register definitions
@@ -27,10 +21,10 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 │           └── led_blink/
 │               ├── hal_cfg/
 │               │   ├── bsp/
-│               │   │   ├── bsp_cfg.h        # project BSP config (assert, param check)
-│               │   │   └── bsp_clock_cfg.h  # project clock tree config
+│               │   │   ├── bsp_cfg.h         # project BSP config (assert, param check)
+│               │   │   └── bsp_clock_cfg.h   # project clock tree config
 │               │   └── driver/
-│               │       └── stm32l1_gpio_cfg.h  # per-driver overrides
+│               │       └── stm32l1_gpio_cfg.h
 │               ├── hal_gen/             # generated: hal_data.[ch], pin_data.[ch]
 │               └── src/
 │                   └── hal_entry.c      # application entry
@@ -48,9 +42,11 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
     └── stm32l151cbtx_flash.ld           # STM32L151CB Flash and RAM layout
 ```
 
-A folder is added with its first working module. The repository does not keep empty source placeholders.
+Each peripheral instance lives in its own folder under `hal/src/`, named `<mcu>_<peripheral>/`. Application code sees only the API in `hal/inc/api/`; the instance vtable in `hal_data.c` is what glues the two together.
 
-### III. First Target
+A folder is added with its first working module. No empty placeholders.
+
+## First target
 
 ```text
 MCU     : STM32L151CBT6
@@ -59,11 +55,11 @@ LED     : PB8
 Clocks  : HSE 8 MHz, PLL x12 / 3, SYSCLK 32 MHz
 ```
 
-The first example uses GPIO and the BSP software delay to blink the LED. A new peripheral is added only with an example that can be built and tested.
+The first example uses GPIO and the BSP software delay to blink `PB8`. A new peripheral is added only with an example that can be built and tested.
 
-### IV. Build
+## Build
 
-Requires the Arm GNU Toolchain (arm-none-eabi-gcc, tested with GCC 10.3). The Makefile expects it at GCC_PATH. Set GCC_PATH= on the make command line if installed elsewhere.
+Needs the Arm GNU Toolchain (arm-none-eabi-gcc, tested with GCC 10.3). The Makefile expects it at `GCC_PATH`. Override on the command line if installed elsewhere.
 
 Build the default LED blink firmware:
 
@@ -71,14 +67,14 @@ Build the default LED blink firmware:
 make
 ```
 
-Build a different example. Set NAME_MODULE to the example name and PROJECT_DIR to the example folder:
+Build a different example by pointing `NAME_MODULE` and `PROJECT_DIR` at it:
 
 ```sh
 make NAME_MODULE=led_blink   PROJECT_DIR=examples/ak_base_kit/gpio/led_blink
 make NAME_MODULE=echo        PROJECT_DIR=examples/ak_base_kit/uart/echo
 ```
 
-Output goes to build_<NAME_MODULE>/<NAME_MODULE>.{elf,map,bin}.
+Output goes to `build_<NAME_MODULE>/<NAME_MODULE>.{elf,map,bin}`.
 
 Clean:
 
@@ -86,13 +82,13 @@ Clean:
 make clean
 ```
 
-### V. Flash
+## Flash
 
-The firmware in build_<NAME_MODULE>/<NAME_MODULE>.bin is a standalone image linked at 0x08000000.
+The firmware in `build_<NAME_MODULE>/<NAME_MODULE>.bin` is a standalone image linked at `0x08000000`.
 
 > **Warning:** the AK Embedded Base Kit ships with an AK bootloader at the same flash origin. Flashing this image with SWD overwrites the bootloader. Save the bootloader image first if you want to restore it later.
 
-Uses STM32CubeProgrammer over SWD. Default path is $(HOME)/Workspace/Tools/STM32CubeProgrammer/bin. Set PROGRAMER_PATH= if installed elsewhere.
+Uses STM32CubeProgrammer over SWD. Default path is `$(HOME)/Workspace/Tools/STM32CubeProgrammer/bin`. Override with `PROGRAMER_PATH` if installed elsewhere.
 
 ```sh
 make flash
@@ -100,7 +96,7 @@ make flash PROGRAMER_PATH=/opt/st/stm32cubeprog/bin
 make flash APP_START_ADDR=0x08003000     # skip the AK bootloader region
 ```
 
-### VI. Debug
+## Debug
 
 Runs openocd in a new xterm and launches GDB (or DDD) attached to the ELF.
 
@@ -109,27 +105,27 @@ make debug
 make debug gdb=ddd
 ```
 
-Needs stm32l_init.gdb in the folder (same style as folders 00 to 04).
+Needs `stm32l_init.gdb` in the folder (same style as folders 00 to 04).
 
-### VII. Porting checklist
+## Porting
 
 **Add a new board on STM32L1:**
 
-1. Create board/<board_name>/ with board.h, board_init.[ch], board_leds.[ch].
-2. Define BOARD_<NAME> in board.h.
-3. Add a new example under examples/<board_name>/<peripheral>/<example>/ with its own hal_cfg/ and hal_gen/.
-4. Build with make PROJECT_DIR=examples/<board_name>/...
+1. Create `board/<board_name>/` with `board.h`, `board_init.[ch]`, `board_leds.[ch]`.
+2. Define `BOARD_<NAME>` in `board.h`.
+3. Add a new example under `examples/<board_name>/<peripheral>/<example>/` with its own `hal_cfg/` and `hal_gen/`.
+4. Build with `make PROJECT_DIR=examples/<board_name>/...`.
 
 **Add a new MCU:**
 
-1. Put the vendor CMSIS headers under cmsis/ (or a per-MCU subfolder).
-2. Add hal/src/bsp/mcu/<mcu>/bsp_clocks.[ch] for clock init.
-3. For each peripheral you use, add hal/src/<mcu>_<peripheral>/<mcu>_<peripheral>.c that implements the API vtable g_<mod>_on_<mcu>_<peripheral>.
-4. Add a linker script under script/ for the new MCU memory map.
-5. Add a startup file that calls SystemInit and then main. main is defined weakly in bsp_common.c.
-6. Application code (hal_entry.c) does not change. Only hal_data.c binds the new instance vtable.
+1. Put the vendor CMSIS headers under `cmsis/` (or a per-MCU subfolder).
+2. Add `hal/src/bsp/mcu/<mcu>/bsp_clocks.[ch]` for clock init.
+3. For each peripheral you use, add `hal/src/<mcu>_<peripheral>/<mcu>_<peripheral>.c` that implements the API vtable `g_<mod>_on_<mcu>_<peripheral>`.
+4. Add a linker script under `script/` for the new MCU memory map.
+5. Add a startup file that calls `SystemInit` and then `main`. `main` is defined weakly in `bsp_common.c`.
+6. Application code (`hal_entry.c`) does not change. Only `hal_data.c` rebinds the instance vtable to the new driver.
 
-### VIII. References
+## References
 
-1. [STM32L151 reference manual (RM0038)](https://www.st.com/resource/en/reference_manual/rm0038-stm32l100xx-stm32l151xx-stm32l152xx-and-stm32l162xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf): register map and peripheral behaviour.
-2. [Cortex-M3 Devices Generic User Guide](https://developer.arm.com/documentation/dui0552/a/): SysTick, NVIC, memory model.
+1. [STM32L151 reference manual (RM0038)](https://www.st.com/resource/en/reference_manual/rm0038-stm32l100xx-stm32l151xx-stm32l152xx-and-stm32l162xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf) - register map and peripheral behaviour.
+2. [Cortex-M3 Devices Generic User Guide](https://developer.arm.com/documentation/dui0552/a/) - SysTick, NVIC, memory model.
