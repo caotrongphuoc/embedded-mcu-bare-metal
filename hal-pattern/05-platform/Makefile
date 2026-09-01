@@ -19,6 +19,7 @@ CPPFLAGS := \
 	-Iboard/ak_base_kit \
 	-Ihal/inc/api \
 	-Ihal/inc/instances \
+	-Ihal/src/bsp/mcu/all \
 	-Ihal/src/bsp/mcu/stm32l1 \
 	-I$(PROJECT_DIR)/hal_cfg/bsp \
 	-I$(PROJECT_DIR)/hal_cfg/driver \
@@ -60,6 +61,7 @@ CMSIS_SOURCES := \
 	cmsis/system_stm32l1xx.c
 
 BSP_SOURCES := \
+	hal/src/bsp/mcu/all/bsp_delay.c \
 	hal/src/bsp/mcu/stm32l1/bsp_clocks.c
 
 HAL_SOURCES := \

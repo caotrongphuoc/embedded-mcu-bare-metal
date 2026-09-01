@@ -36,7 +36,8 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 │   └── src/
 │       ├── bsp/
 │       │   └── mcu/
-│       │       └── stm32l1/         # clock, startup, interrupt and memory
+│       │       ├── all/             # BSP code shared by supported MCUs
+│       │       └── stm32l1/         # STM32L1 clock initialization
 │       └── mcu/
 │           └── stm32l1/             # STM32L1 peripheral implementations
 │               └── gpio/
@@ -60,17 +61,23 @@ Board  : AK Embedded Base Kit
 LED    : PB8
 ```
 
-The first example uses GPIO and the system tick to blink the LED. Another peripheral is added only with an example that can be built and tested.
+The first example uses GPIO and the BSP software delay to blink the LED. Another peripheral is added only with an example that can be built and tested.
 
 ### V. Build
 
-The build requires the Arm GNU Toolchain in `PATH`. Build the platform sources with:
+The build requires the Arm GNU Toolchain in `PATH`. Build the LED blink firmware with:
+
+```sh
+make
+```
+
+Build only the platform sources with:
 
 ```sh
 make platform
 ```
 
-Application sources are listed by the project Makefile. The first application is added with the LED blink example.
+The ELF, map, and binary files are written to `build`.
 
 ### VI. References
 

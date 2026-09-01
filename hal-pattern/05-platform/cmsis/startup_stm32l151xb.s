@@ -100,6 +100,9 @@ LoopFillZerobss:
 
 /* Call static constructors */
     bl __libc_init_array
+/* Call the board initialization function. */
+  movs r0, #0
+  bl bsp_init
 /* Call the application's entry point.*/
   bl main
   bx lr
@@ -378,6 +381,5 @@ g_pfnVectors:
 
   .weak TIM7_IRQHandler
   .thumb_set TIM7_IRQHandler,Default_Handler
-
 
 
