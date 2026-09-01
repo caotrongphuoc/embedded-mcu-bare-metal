@@ -122,51 +122,51 @@ static void bsp_clock_set_prechange(uint32_t requested_freq_hz);
 /** Initializes the system clocks. */
 void bsp_clock_init(void)
 {
-	bsp_clock_set_prechange(BSP_CFG_SYSCLK_HZ);
+    bsp_clock_set_prechange(BSP_CFG_SYSCLK_HZ);
 
-	RCC->CR &= ~RCC_CR_HSEBYP;
-	RCC->CR |= RCC_CR_HSEON;
-	while (!(RCC->CR & RCC_CR_HSERDY))
-	{
-	}
+    RCC->CR &= ~RCC_CR_HSEBYP;
+    RCC->CR |= RCC_CR_HSEON;
+    while (!(RCC->CR & RCC_CR_HSERDY))
+    {
+    }
 
-	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL | RCC_CFGR_PLLDIV)) | BSP_PRV_PLL_CFG;
-	RCC->CR |= RCC_CR_PLLON;
-	while (!(RCC->CR & RCC_CR_PLLRDY))
-	{
-	}
+    RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL | RCC_CFGR_PLLDIV)) | BSP_PRV_PLL_CFG;
+    RCC->CR |= RCC_CR_PLLON;
+    while (!(RCC->CR & RCC_CR_PLLRDY))
+    {
+    }
 
-	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)) | BSP_PRV_CLOCK_DIV_CFG;
-	RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | RCC_CFGR_SW_PLL;
-	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
-	{
-	}
+    RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)) | BSP_PRV_CLOCK_DIV_CFG;
+    RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | RCC_CFGR_SW_PLL;
+    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
+    {
+    }
 
-	SystemCoreClockUpdate();
-	while (SystemCoreClock != (BSP_CFG_SYSCLK_HZ / BSP_CFG_HCLK_DIV))
-	{
-	}
+    SystemCoreClockUpdate();
+    while (SystemCoreClock != (BSP_CFG_SYSCLK_HZ / BSP_CFG_HCLK_DIV))
+    {
+    }
 }
 
 /** Prepares power and flash settings before the system clock is changed. */
 static void bsp_clock_set_prechange(uint32_t requested_freq_hz)
 {
-	RCC->APB1ENR |= RCC_APB1ENR_PWREN;
-	(void)RCC->APB1ENR;
+    RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+    (void)RCC->APB1ENR;
 
-	PWR->CR = (PWR->CR & ~PWR_CR_VOS) | PWR_CR_VOS_0;
-	while (PWR->CSR & PWR_CSR_VOSF)
-	{
-	}
+    PWR->CR = (PWR->CR & ~PWR_CR_VOS) | PWR_CR_VOS_0;
+    while (PWR->CSR & PWR_CSR_VOSF)
+    {
+    }
 
-	FLASH->ACR |= FLASH_ACR_ACC64 | FLASH_ACR_PRFTEN;
+    FLASH->ACR |= FLASH_ACR_ACC64 | FLASH_ACR_PRFTEN;
 
-	if (requested_freq_hz > BSP_PRV_FLASH_ZERO_WAIT_STATE_MAX_HZ)
-	{
-		FLASH->ACR |= FLASH_ACR_LATENCY;
-	}
-	else
-	{
-		FLASH->ACR &= ~FLASH_ACR_LATENCY;
-	}
+    if (requested_freq_hz > BSP_PRV_FLASH_ZERO_WAIT_STATE_MAX_HZ)
+    {
+        FLASH->ACR |= FLASH_ACR_LATENCY;
+    }
+    else
+    {
+        FLASH->ACR &= ~FLASH_ACR_LATENCY;
+    }
 }
