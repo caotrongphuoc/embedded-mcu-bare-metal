@@ -6,6 +6,7 @@
 
 HAL_HEADER
 
+extern stm32l1_gpio_instance_ctrl_t g_gpio_ctrl;
 extern const hal_gpio_instance_t g_gpio;
 
 void hal_entry(void);
