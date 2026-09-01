@@ -63,7 +63,7 @@ The first example uses GPIO and the BSP software delay to blink the LED. A new p
 
 ### IV. Build
 
-Requires the Arm GNU Toolchain (`arm-none-eabi-gcc`, tested with GCC 10.3 or newer). Put it on `PATH`.
+Requires the Arm GNU Toolchain (`arm-none-eabi-gcc`, tested with GCC 10.3). The Makefile expects it at `$(GCC_PATH)`. Set `GCC_PATH=` if installed elsewhere.
 
 Build the default LED blink firmware:
 
@@ -71,20 +71,14 @@ Build the default LED blink firmware:
 make
 ```
 
-Build a different example. Point `PROJECT_DIR` at the example folder:
+Build a different example. Point `NAME_MODULE` at the example name and `PROJECT_DIR` at the example folder:
 
 ```sh
-make PROJECT_DIR=examples/ak_base_kit/gpio/led_blink
-make PROJECT_DIR=examples/ak_base_kit/uart/rs485
+make NAME_MODULE=led_blink   PROJECT_DIR=examples/ak_base_kit/gpio/led_blink
+make NAME_MODULE=echo        PROJECT_DIR=examples/ak_base_kit/uart/echo
 ```
 
-Build only the platform sources without linking an application:
-
-```sh
-make platform
-```
-
-Output goes to `build/<example>.{elf,map,bin}`. `<example>` is the last path segment of `PROJECT_DIR`.
+Output goes to `build_<NAME_MODULE>/<NAME_MODULE>.{elf,map,bin}`.
 
 Clean:
 
@@ -94,26 +88,30 @@ make clean
 
 ### V. Flash
 
-The firmware in `build/<example>.bin` is a standalone image linked at `0x08000000`.
+The firmware in `build_<NAME_MODULE>/<NAME_MODULE>.bin` is a standalone image linked at `0x08000000`.
 
-> **Warning:** the AK Embedded Base Kit ships with an AK bootloader at the same flash origin. Flashing this image with ST-Link overwrites the bootloader. Save the bootloader image first if you want to keep it.
+> **Warning:** the AK Embedded Base Kit ships with an AK bootloader at the same flash origin. Flashing this image with SWD overwrites the bootloader. Save the bootloader image first if you want to restore it later.
 
-With OpenOCD:
-
-```sh
-openocd -f interface/stlink.cfg -f target/stm32l1.cfg \
-    -c "program build/led_blink.bin 0x08000000 verify reset exit"
-```
-
-With `st-flash`:
+Uses STM32CubeProgrammer over SWD. Default path is `$(HOME)/Workspace/Tools/STM32CubeProgrammer/bin`. Set `PROGRAMER_PATH=` if installed elsewhere.
 
 ```sh
-st-flash write build/led_blink.bin 0x08000000
+make flash
+make flash PROGRAMER_PATH=/opt/st/stm32cubeprog/bin
+make flash APP_START_ADDR=0x08003000     # skip the AK bootloader region
 ```
 
-To keep the AK bootloader, edit the linker `ORIGIN` to skip past the bootloader region and rebuild. Flash the new image at the offset. Do not erase the bootloader region.
+### VI. Debug
 
-### VI. Porting checklist
+Runs `openocd` in a new `xterm` and launches GDB (or DDD) attached to the ELF.
+
+```sh
+make debug
+make debug gdb=ddd
+```
+
+Needs `stm32l_init.gdb` in the folder (same style as folders 00 to 04).
+
+### VII. Porting checklist
 
 **Add a new board on STM32L1:**
 
@@ -131,7 +129,7 @@ To keep the AK bootloader, edit the linker `ORIGIN` to skip past the bootloader 
 5. Add a startup file that calls `SystemInit` and then `main`. `main` is defined weakly in `bsp_common.c`.
 6. Application code (`hal_entry.c`) does not change. Only `hal_data.c` binds the new instance vtable.
 
-### VII. References
+### VIII. References
 
 1. [STM32L151 reference manual (RM0038)](https://www.st.com/resource/en/reference_manual/rm0038-stm32l100xx-stm32l151xx-stm32l152xx-and-stm32l162xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf): register map and peripheral behaviour.
 2. [Cortex-M3 Devices Generic User Guide](https://developer.arm.com/documentation/dui0552/a/): SysTick, NVIC, memory model.
