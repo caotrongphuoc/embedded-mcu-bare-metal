@@ -62,22 +62,22 @@ extern const hal_gpio_api_t g_gpio_on_stm32l1_gpio;
 hal_err_t STM32L1_GPIO_Open(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_cfg_t const * p_cfg);
 hal_err_t STM32L1_GPIO_Close(hal_gpio_ctrl_t * const p_ctrl);
 hal_err_t STM32L1_GPIO_PinsCfg(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_cfg_t const * p_cfg);
-hal_err_t STM32L1_GPIO_PinCfg(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_pin_t pin, uint32_t cfg);
+hal_err_t STM32L1_GPIO_PinCfg(hal_gpio_ctrl_t * const p_ctrl, bsp_io_port_pin_t pin, uint32_t cfg);
 hal_err_t STM32L1_GPIO_PinRead(hal_gpio_ctrl_t * const p_ctrl,
-                               hal_gpio_pin_t         pin,
-                               hal_gpio_level_t     * p_pin_value);
+                               bsp_io_port_pin_t       pin,
+                               bsp_io_level_t        * p_pin_value);
 hal_err_t STM32L1_GPIO_PinWrite(hal_gpio_ctrl_t * const p_ctrl,
-                                hal_gpio_pin_t         pin,
-                                hal_gpio_level_t       level);
+                                bsp_io_port_pin_t       pin,
+                                bsp_io_level_t          level);
 hal_err_t STM32L1_GPIO_PortDirectionSet(hal_gpio_ctrl_t * const p_ctrl,
-                                        hal_gpio_port_t         port,
+                                        bsp_io_port_t           port,
                                         hal_gpio_size_t         direction_values,
                                         hal_gpio_size_t         mask);
 hal_err_t STM32L1_GPIO_PortRead(hal_gpio_ctrl_t * const p_ctrl,
-                                hal_gpio_port_t         port,
+                                bsp_io_port_t           port,
                                 hal_gpio_size_t       * p_port_value);
 hal_err_t STM32L1_GPIO_PortWrite(hal_gpio_ctrl_t * const p_ctrl,
-                                 hal_gpio_port_t         port,
+                                 bsp_io_port_t           port,
                                  hal_gpio_size_t         value,
                                  hal_gpio_size_t         mask);
 

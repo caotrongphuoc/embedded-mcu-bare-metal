@@ -9,21 +9,21 @@ static void hal_entry_error_trap(hal_err_t err);
 void hal_entry(void)
 {
 	hal_err_t err;
-	hal_gpio_level_t level = HAL_GPIO_LEVEL_LOW;
-	hal_gpio_pin_t led_pin = g_bsp_leds.p_leds[BSP_LED_LED1];
+	bsp_io_level_t    level   = BSP_IO_LEVEL_LOW;
+	bsp_io_port_pin_t led_pin = g_bsp_leds.p_leds[BSP_LED_LED1];
 
 	err = STM32L1_GPIO_Open(&g_gpio_ctrl, &g_bsp_pin_cfg);
 	hal_entry_error_trap(err);
 
 	while (1)
 	{
-		if (HAL_GPIO_LEVEL_LOW == level)
+		if (BSP_IO_LEVEL_LOW == level)
 		{
-			level = HAL_GPIO_LEVEL_HIGH;
+			level = BSP_IO_LEVEL_HIGH;
 		}
 		else
 		{
-			level = HAL_GPIO_LEVEL_LOW;
+			level = BSP_IO_LEVEL_LOW;
 		}
 
 		err = STM32L1_GPIO_PinWrite(&g_gpio_ctrl, led_pin, level);

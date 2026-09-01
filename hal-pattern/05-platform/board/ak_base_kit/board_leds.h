@@ -11,7 +11,7 @@ HAL_HEADER
 typedef struct st_bsp_leds
 {
 	uint16_t led_count;
-	hal_gpio_pin_t const* p_leds;
+	bsp_io_port_pin_t const* p_leds;
 } bsp_leds_t;
 
 /** User LEDs available on the board. */

@@ -31,7 +31,7 @@
     ((GPIO_TypeDef *) (GPIOA_BASE + ((GPIOB_BASE - GPIOA_BASE) * (port_number))))
 
 static void stm32l1_gpio_pins_config(hal_gpio_cfg_t const * p_cfg);
-static void stm32l1_gpio_pin_config(hal_gpio_pin_t pin, uint32_t cfg);
+static void stm32l1_gpio_pin_config(bsp_io_port_pin_t pin, uint32_t cfg);
 
 const hal_gpio_api_t g_gpio_on_stm32l1_gpio =
 {
@@ -99,7 +99,7 @@ hal_err_t STM32L1_GPIO_PinsCfg(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_cfg_t co
     return HAL_SUCCESS;
 }
 
-hal_err_t STM32L1_GPIO_PinCfg(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_pin_t pin, uint32_t cfg)
+hal_err_t STM32L1_GPIO_PinCfg(hal_gpio_ctrl_t * const p_ctrl, bsp_io_port_pin_t pin, uint32_t cfg)
 {
 #if (1 == STM32L1_GPIO_CFG_PARAM_CHECKING_ENABLE)
     stm32l1_gpio_instance_ctrl_t * p_instance_ctrl = (stm32l1_gpio_instance_ctrl_t *) p_ctrl;
@@ -115,8 +115,8 @@ hal_err_t STM32L1_GPIO_PinCfg(hal_gpio_ctrl_t * const p_ctrl, hal_gpio_pin_t pin
 }
 
 hal_err_t STM32L1_GPIO_PinRead(hal_gpio_ctrl_t * const p_ctrl,
-                               hal_gpio_pin_t         pin,
-                               hal_gpio_level_t     * p_pin_value)
+                               bsp_io_port_pin_t         pin,
+                               bsp_io_level_t     * p_pin_value)
 {
 #if (1 == STM32L1_GPIO_CFG_PARAM_CHECKING_ENABLE)
     stm32l1_gpio_instance_ctrl_t * p_instance_ctrl = (stm32l1_gpio_instance_ctrl_t *) p_ctrl;
@@ -132,13 +132,13 @@ hal_err_t STM32L1_GPIO_PinRead(hal_gpio_ctrl_t * const p_ctrl,
 
     GPIO_TypeDef * p_gpio_regs = STM32L1_GPIO_PRV_PORT_ADDRESS(port_number);
 
-    *p_pin_value = (hal_gpio_level_t) ((p_gpio_regs->IDR >> pin_number) & 1U);
+    *p_pin_value = (bsp_io_level_t) ((p_gpio_regs->IDR >> pin_number) & 1U);
 
     return HAL_SUCCESS;
 }
 
 hal_err_t STM32L1_GPIO_PortRead(hal_gpio_ctrl_t * const p_ctrl,
-                                hal_gpio_port_t         port,
+                                bsp_io_port_t         port,
                                 hal_gpio_size_t       * p_port_value)
 {
 #if (1 == STM32L1_GPIO_CFG_PARAM_CHECKING_ENABLE)
@@ -160,7 +160,7 @@ hal_err_t STM32L1_GPIO_PortRead(hal_gpio_ctrl_t * const p_ctrl,
 }
 
 hal_err_t STM32L1_GPIO_PortWrite(hal_gpio_ctrl_t * const p_ctrl,
-                                 hal_gpio_port_t         port,
+                                 bsp_io_port_t         port,
                                  hal_gpio_size_t         value,
                                  hal_gpio_size_t         mask)
 {
@@ -185,26 +185,26 @@ hal_err_t STM32L1_GPIO_PortWrite(hal_gpio_ctrl_t * const p_ctrl,
 }
 
 hal_err_t STM32L1_GPIO_PinWrite(hal_gpio_ctrl_t * const p_ctrl,
-                                hal_gpio_pin_t         pin,
-                                hal_gpio_level_t       level)
+                                bsp_io_port_pin_t         pin,
+                                bsp_io_level_t       level)
 {
 #if (1 == STM32L1_GPIO_CFG_PARAM_CHECKING_ENABLE)
     stm32l1_gpio_instance_ctrl_t * p_instance_ctrl = (stm32l1_gpio_instance_ctrl_t *) p_ctrl;
     HAL_ASSERT(NULL != p_instance_ctrl);
     HAL_ERROR_RETURN(STM32L1_GPIO_OPEN == p_instance_ctrl->open, HAL_ERR_NOT_OPEN);
-    HAL_ERROR_RETURN(level <= HAL_GPIO_LEVEL_HIGH, HAL_ERR_INVALID_ARGUMENT);
+    HAL_ERROR_RETURN(level <= BSP_IO_LEVEL_HIGH, HAL_ERR_INVALID_ARGUMENT);
 #else
     HAL_PARAMETER_NOT_USED(p_ctrl);
 #endif
 
     hal_gpio_size_t setbits = 0U;
     hal_gpio_size_t clrbits = 0U;
-    hal_gpio_port_t port    = (hal_gpio_port_t) (STM32L1_GPIO_PRV_PORT_BITS & (hal_gpio_size_t) pin);
+    bsp_io_port_t port    = (bsp_io_port_t) (STM32L1_GPIO_PRV_PORT_BITS & (hal_gpio_size_t) pin);
 
     hal_gpio_size_t shift    = STM32L1_GPIO_PRV_PIN_BITS & (hal_gpio_size_t) pin;
     hal_gpio_size_t pin_mask = (hal_gpio_size_t) (1U << shift);
 
-    if (HAL_GPIO_LEVEL_LOW == level)
+    if (BSP_IO_LEVEL_LOW == level)
     {
         clrbits = pin_mask;
     }
@@ -223,7 +223,7 @@ hal_err_t STM32L1_GPIO_PinWrite(hal_gpio_ctrl_t * const p_ctrl,
 }
 
 hal_err_t STM32L1_GPIO_PortDirectionSet(hal_gpio_ctrl_t * const p_ctrl,
-                                        hal_gpio_port_t         port,
+                                        bsp_io_port_t         port,
                                         hal_gpio_size_t         direction_values,
                                         hal_gpio_size_t         mask)
 {
@@ -273,7 +273,7 @@ static void stm32l1_gpio_pins_config(hal_gpio_cfg_t const * p_cfg)
     }
 }
 
-static void stm32l1_gpio_pin_config(hal_gpio_pin_t pin, uint32_t cfg)
+static void stm32l1_gpio_pin_config(bsp_io_port_pin_t pin, uint32_t cfg)
 {
     uint32_t port_number = ((uint32_t) pin >> STM32L1_GPIO_PRV_PORT_OFFSET) & STM32L1_GPIO_PRV_8BIT_MASK;
     uint32_t pin_number  = (uint32_t) pin & STM32L1_GPIO_PRV_PIN_BITS;

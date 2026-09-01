@@ -5,7 +5,7 @@
 
 HAL_HEADER
 
-#define AK_BASE_KIT_LED_PIN    ((hal_gpio_pin_t) 0x0108)
+#define AK_BASE_KIT_LED_PIN    ((bsp_io_port_pin_t) 0x0108)
 
 extern const hal_gpio_cfg_t g_bsp_pin_cfg;
 
