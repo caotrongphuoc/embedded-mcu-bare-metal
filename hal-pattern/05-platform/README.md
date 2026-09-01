@@ -2,13 +2,13 @@
 
 ## Introduction
 
-This project develops a reusable Hardware Abstraction Layer for MCU platforms. STM32L151 and the AK Embedded Base Kit are the first target used to build and test it.
+This project builds a reusable Hardware Abstraction Layer for MCU platforms. STM32L151 on the AK Embedded Base Kit is the first target used to write and test it.
 
-The interfaces are kept independent from the MCU and board. Porting to another target requires a peripheral implementation, board support, and target configuration.
+The layout, naming, and configuration follow Renesas FSP (Flexible Software Package) so the source reads side by side with FSP. The interfaces do not depend on the MCU or the board. Porting to another target needs a peripheral implementation, board support, and target configuration.
 
 ### I. Design
 
-Each peripheral is defined by an API, configuration data, runtime control data, and an instance that connects them. Application and device driver code use the API without accessing MCU registers.
+Each peripheral has an API, configuration data, runtime control data, and an instance that connects them. Application and device driver code calls the API vtable. It does not touch MCU registers.
 
 CMSIS provides the STM32L151 register definitions. The HAL source owns the peripheral logic above those definitions.
 
@@ -16,74 +16,122 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 
 ```text
 05-platform/
-├── Makefile                         # build selected example and target
-├── README.md                        # project overview and porting notes
+├── Makefile                             # build one example and target
+├── README.md                            # project overview and porting notes
 ├── board/
-│   └── ak_base_kit/                 # board initialization and devices
-├── cmsis/                           # Cortex M and MCU register definitions
+│   └── ak_base_kit/                     # board init, LED table, board.h
+├── cmsis/                               # Cortex M and MCU register definitions
 ├── examples/
 │   └── ak_base_kit/
 │       └── gpio/
 │           └── led_blink/
-│               ├── hal_cfg/        # project build configuration
-│               ├── hal_gen/        # generated entry, instances and pin data
+│               ├── hal_cfg/
+│               │   ├── bsp/
+│               │   │   ├── bsp_cfg.h        # project BSP config (assert, param check)
+│               │   │   └── bsp_clock_cfg.h  # project clock tree config
+│               │   └── driver/
+│               │       └── stm32l1_gpio_cfg.h  # per-driver overrides
+│               ├── hal_gen/             # generated: hal_data.[ch], pin_data.[ch]
 │               └── src/
-│                   └── hal_entry.c # application entry
+│                   └── hal_entry.c      # application entry
 ├── hal/
 │   ├── inc/
-│   │   ├── api/                     # interfaces shared by all MCUs
-│   │   └── instances/               # peripheral instances used by applications
+│   │   ├── api/                         # interfaces shared by all MCUs
+│   │   └── instances/                   # peripheral instances used by applications
 │   └── src/
 │       ├── bsp/
 │       │   └── mcu/
-│       │       ├── all/             # BSP code shared by supported MCUs
-│       │       └── stm32l1/         # STM32L1 clock initialization
-│       └── stm32l1_gpio/            # STM32L1 GPIO driver instance
+│       │       ├── all/                 # bsp_common, bsp_delay, bsp_io, bsp_compiler_support
+│       │       └── stm32l1/             # STM32L1 clock initialization
+│       └── stm32l1_gpio/                # STM32L1 GPIO driver instance
 └── script/
-    └── stm32l151cbtx_flash.ld        # STM32L151CB Flash and RAM layout
+    └── stm32l151cbtx_flash.ld           # STM32L151CB Flash and RAM layout
 ```
 
-Folders are added with their first working module. The repository does not keep empty source placeholders.
+A folder is added with its first working module. The repository does not keep empty source placeholders.
 
-### III. Board Bring Up
-
-A board using STM32L151 needs a board directory under `board`. Each example keeps its pin, instance, and build configuration in its own `hal_gen` and `hal_cfg` directories. It reuses the peripheral implementations under `hal/src/stm32l1_*`.
-
-A board using another MCU needs register definitions, an MCU BSP under `hal/src/bsp/mcu`, and one driver folder per peripheral instance under `hal/src/<instance>` (for example `hal/src/nrf52_gpio`). Existing applications and device drivers remain unchanged when the new target provides the same APIs.
-
-### IV. First Target
+### III. First Target
 
 ```text
-MCU    : STM32L151CBT6
-Board  : AK Embedded Base Kit
-LED    : PB8
+MCU     : STM32L151CBT6
+Board   : AK Embedded Base Kit
+LED     : PB8
+Clocks  : HSE 8 MHz, PLL x12 / 3, SYSCLK 32 MHz
 ```
 
-The first example uses GPIO and the BSP software delay to blink the LED. Another peripheral is added only with an example that can be built and tested.
+The first example uses GPIO and the BSP software delay to blink the LED. A new peripheral is added only with an example that can be built and tested.
 
-### V. Build
+### IV. Build
 
-The build requires the Arm GNU Toolchain in `PATH`. Build the default LED blink firmware with:
+Requires the Arm GNU Toolchain (`arm-none-eabi-gcc`, tested with GCC 10.3 or newer). Put it on `PATH`.
+
+Build the default LED blink firmware:
 
 ```sh
 make
 ```
 
-Build a different example by pointing `PROJECT_DIR` at its folder:
+Build a different example. Point `PROJECT_DIR` at the example folder:
 
 ```sh
+make PROJECT_DIR=examples/ak_base_kit/gpio/led_blink
 make PROJECT_DIR=examples/ak_base_kit/uart/rs485
 ```
 
-Build only the platform sources with:
+Build only the platform sources without linking an application:
 
 ```sh
 make platform
 ```
 
-The ELF, map, and binary files are written to `build` and named after the example folder.
+Output goes to `build/<example>.{elf,map,bin}`. `<example>` is the last path segment of `PROJECT_DIR`.
 
-### VI. References
+Clean:
+
+```sh
+make clean
+```
+
+### V. Flash
+
+The firmware in `build/<example>.bin` is a standalone image linked at `0x08000000`.
+
+> **Warning:** the AK Embedded Base Kit ships with an AK bootloader at the same flash origin. Flashing this image with ST-Link overwrites the bootloader. Save the bootloader image first if you want to keep it.
+
+With OpenOCD:
+
+```sh
+openocd -f interface/stlink.cfg -f target/stm32l1.cfg \
+    -c "program build/led_blink.bin 0x08000000 verify reset exit"
+```
+
+With `st-flash`:
+
+```sh
+st-flash write build/led_blink.bin 0x08000000
+```
+
+To keep the AK bootloader, edit the linker `ORIGIN` to skip past the bootloader region and rebuild. Flash the new image at the offset. Do not erase the bootloader region.
+
+### VI. Porting checklist
+
+**Add a new board on STM32L1:**
+
+1. Create `board/<board_name>/` with `board.h`, `board_init.[ch]`, `board_leds.[ch]`.
+2. Define `BOARD_<NAME>` in `board.h`.
+3. Add a new example under `examples/<board_name>/<peripheral>/<example>/` with its own `hal_cfg/` and `hal_gen/`.
+4. Build with `make PROJECT_DIR=examples/<board_name>/...`.
+
+**Add a new MCU:**
+
+1. Put the vendor CMSIS headers under `cmsis/` (or a per-MCU subfolder).
+2. Add `hal/src/bsp/mcu/<mcu>/bsp_clocks.[ch]` for clock init.
+3. For each peripheral you use, add `hal/src/<mcu>_<peripheral>/<mcu>_<peripheral>.c` that implements the API vtable `g_<mod>_on_<mcu>_<peripheral>`.
+4. Add a linker script under `script/` for the new MCU memory map.
+5. Add a startup file that calls `SystemInit` and then `main`. `main` is defined weakly in `bsp_common.c`.
+6. Application code (`hal_entry.c`) does not change. Only `hal_data.c` binds the new instance vtable.
+
+### VII. References
 
 1. [Renesas RA0E3](https://www.renesas.com/en/products/ra0e3): MCU overview and technical documents.
 2. [FSP Architecture](https://renesas.github.io/fsp/_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html): interfaces, instances, API conventions, build time configuration, and file structure.
