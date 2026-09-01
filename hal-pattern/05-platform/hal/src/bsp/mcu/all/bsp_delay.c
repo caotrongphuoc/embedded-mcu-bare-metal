@@ -1,7 +1,9 @@
 #include "bsp_delay.h"
 
-#define BSP_DELAY_US_PER_SECOND (1000000)
-#define BSP_DELAY_LOOP_CYCLES   (4)
+#define BSP_DELAY_US_PER_SECOND    (1000000U)
+/* Cycles per inner-loop iteration. 4 matches FSP for Cortex-M4;
+ * verify with a scope on Cortex-M3 if delay accuracy matters. */
+#define BSP_DELAY_LOOP_CYCLES      (4U)
 
 extern uint32_t SystemCoreClock;
 
@@ -9,18 +11,20 @@ static void bsp_prv_software_delay_loop(uint32_t loop_count) __attribute__((nake
 
 void bsp_software_delay(uint32_t delay, bsp_delay_units_t units)
 {
-	uint32_t cycles_per_us = (SystemCoreClock + BSP_DELAY_US_PER_SECOND - 1) / BSP_DELAY_US_PER_SECOND;
-	uint64_t total_us      = (uint64_t)delay * (uint32_t)units;
-	uint64_t loop_count    = (total_us * cycles_per_us) / BSP_DELAY_LOOP_CYCLES;
+	uint32_t iclk_hz        = SystemCoreClock;
+	uint32_t total_us       = delay * (uint32_t) units;
+	uint32_t cycles_per_us  = (iclk_hz + (BSP_DELAY_US_PER_SECOND * BSP_DELAY_LOOP_CYCLES) - 1U) /
+	                          (BSP_DELAY_US_PER_SECOND * BSP_DELAY_LOOP_CYCLES);
+	uint64_t loops_required = (uint64_t) total_us * cycles_per_us;
 
-	if (loop_count > UINT32_MAX)
+	if (loops_required > UINT32_MAX)
 	{
-		loop_count = UINT32_MAX;
+		loops_required = UINT32_MAX;
 	}
 
-	if (0 != loop_count)
+	if (loops_required > 0U)
 	{
-		bsp_prv_software_delay_loop((uint32_t)loop_count);
+		bsp_prv_software_delay_loop((uint32_t) loops_required);
 	}
 }
 
