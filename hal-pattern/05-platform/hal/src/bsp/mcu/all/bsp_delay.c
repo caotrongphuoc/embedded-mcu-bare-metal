@@ -1,3 +1,4 @@
+#include "bsp_compiler_support.h"
 #include "bsp_delay.h"
 
 #define BSP_DELAY_US_PER_SECOND    (1000000U)
@@ -7,7 +8,7 @@
 
 extern uint32_t SystemCoreClock;
 
-static void bsp_prv_software_delay_loop(uint32_t loop_count) __attribute__((naked, noinline));
+BSP_ATTRIBUTE_STACKLESS static void bsp_prv_software_delay_loop(uint32_t loop_count);
 
 void bsp_software_delay(uint32_t delay, bsp_delay_units_t units)
 {
@@ -28,7 +29,7 @@ void bsp_software_delay(uint32_t delay, bsp_delay_units_t units)
 	}
 }
 
-static void bsp_prv_software_delay_loop(__attribute__((unused)) uint32_t loop_count)
+BSP_ATTRIBUTE_STACKLESS static void bsp_prv_software_delay_loop(__attribute__((unused)) uint32_t loop_count)
 {
 	__asm volatile(
 	    "1:                         \n"
