@@ -35,21 +35,21 @@ HAL_HEADER
 /** Return values shared by HAL modules. */
 typedef enum e_hal_err
 {
-    HAL_SUCCESS = 0,
-    HAL_ERR_ASSERTION,
-    HAL_ERR_INVALID_POINTER,
-    HAL_ERR_INVALID_ARGUMENT,
-    HAL_ERR_INVALID_SIZE,
-    HAL_ERR_INVALID_CHANNEL,
-    HAL_ERR_INVALID_MODE,
-    HAL_ERR_UNSUPPORTED,
-    HAL_ERR_NOT_OPEN,
-    HAL_ERR_NOT_ENABLED,
-    HAL_ERR_IN_USE,
-    HAL_ERR_HW_LOCKED,
-    HAL_ERR_ALREADY_OPEN,
-    HAL_ERR_TIMEOUT,
-    HAL_ERR_INVALID_STATE
+	HAL_SUCCESS = 0,
+	HAL_ERR_ASSERTION,
+	HAL_ERR_INVALID_POINTER,
+	HAL_ERR_INVALID_ARGUMENT,
+	HAL_ERR_INVALID_SIZE,
+	HAL_ERR_INVALID_CHANNEL,
+	HAL_ERR_INVALID_MODE,
+	HAL_ERR_UNSUPPORTED,
+	HAL_ERR_NOT_OPEN,
+	HAL_ERR_NOT_ENABLED,
+	HAL_ERR_IN_USE,
+	HAL_ERR_HW_LOCKED,
+	HAL_ERR_ALREADY_OPEN,
+	HAL_ERR_TIMEOUT,
+	HAL_ERR_INVALID_STATE
 } hal_err_t;
 
 /** Weak error-log hook. Override to route errors to UART, RTT, breakpoint, etc. */
@@ -66,24 +66,24 @@ HAL_FOOTER
 #endif
 
 #define HAL_ERROR_RETURN(a, err)                        \
-    {                                                   \
-        if ((a))                                        \
-        {                                               \
-            (void) 0;                                   \
-        }                                               \
-        else                                            \
-        {                                               \
-            HAL_ERROR_LOG(err);                         \
-            return err;                                 \
-        }                                               \
-    }
+	{                                                   \
+		if ((a))                                        \
+		{                                               \
+			(void) 0;                                   \
+		}                                               \
+		else                                            \
+		{                                               \
+			HAL_ERROR_LOG(err);                         \
+			return err;                                 \
+		}                                               \
+	}
 
 #ifndef HAL_RETURN
 #define HAL_RETURN(err)                                 \
-    {                                                   \
-        HAL_ERROR_LOG(err);                             \
-        return err;                                     \
-    }
+	{                                                   \
+		HAL_ERROR_LOG(err);                             \
+		return err;                                     \
+	}
 #endif
 
 #if (3 == BSP_CFG_ASSERT)
