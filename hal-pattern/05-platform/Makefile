@@ -1,5 +1,5 @@
-PROJECT     := led_blink_ak_base_kit
-PROJECT_DIR := examples/ak_base_kit/gpio/led_blink
+PROJECT_DIR ?= examples/ak_base_kit/gpio/led_blink
+PROJECT     ?= $(notdir $(PROJECT_DIR))
 
 BUILD_DIR := build
 TARGET     := $(BUILD_DIR)/$(PROJECT)

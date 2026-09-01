@@ -63,10 +63,16 @@ The first example uses GPIO and the BSP software delay to blink the LED. Another
 
 ### V. Build
 
-The build requires the Arm GNU Toolchain in `PATH`. Build the LED blink firmware with:
+The build requires the Arm GNU Toolchain in `PATH`. Build the default LED blink firmware with:
 
 ```sh
 make
+```
+
+Build a different example by pointing `PROJECT_DIR` at its folder:
+
+```sh
+make PROJECT_DIR=examples/ak_base_kit/uart/rs485
 ```
 
 Build only the platform sources with:
@@ -75,7 +81,7 @@ Build only the platform sources with:
 make platform
 ```
 
-The ELF, map, and binary files are written to `build`.
+The ELF, map, and binary files are written to `build` and named after the example folder.
 
 ### VI. References
 
