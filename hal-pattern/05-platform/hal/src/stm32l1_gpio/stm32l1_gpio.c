@@ -1,7 +1,7 @@
 #include "stm32l1_gpio.h"
 #include "stm32l1xx.h"
 
-#define STM32L1_GPIO_OPEN                       (0x4750494FU)
+#define STM32L1_GPIO_OPEN                       (0x4750494FU)    /* "GPIO" */
 #define STM32L1_GPIO_CLOSED                     (0x00000000U)
 
 #define STM32L1_GPIO_PRV_PORT_OFFSET    (8U)
