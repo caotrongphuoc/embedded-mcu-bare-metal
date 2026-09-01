@@ -6,9 +6,12 @@
 
 # Embedded MCU Bare Metal
 
-Bare-metal microcontroller examples in three topics: compiler and linker, ARM Cortex-M core, and driver patterns (raw registers, CMSIS, HAL).
+A two-part path for bare-metal MCU work.
 
-Every example blinks the same LED. Each one changes exactly one technique, so the diff between two examples in the same topic shows the new concept.
+1. **Learn** how an MCU boots and how driver code evolves, from raw registers up to a HAL.
+2. **Build** a portable HAL you can apply to more than one MCU. STM32L151 on the AK Embedded Base Kit is the first target used to write and test it.
+
+Every learning example blinks the same LED. Each one changes exactly one technique, so the diff between two examples in the same topic shows the new concept.
 
 ## Demo
 
@@ -16,7 +19,7 @@ Every example blinks the same LED. Each one changes exactly one technique, so th
   <video src="https://github.com/user-attachments/assets/39f845b1-70a8-48ca-bb93-bfc019553a98" controls width="480"></video>
 </div>
 
-The result is the same across every example - this single clip shows what "it works" looks like for every example. Each example's own README focuses on the code change, not the video.
+The result is the same across every learning example - this single clip shows what "it works" looks like. Each example's own README focuses on the code change, not the video.
 
 ## Architecture
 
@@ -24,12 +27,18 @@ The result is the same across every example - this single clip shows what "it wo
 ┌─────────────────────────────────────────────────────────────────────┐
 │ APPLICATION LAYER                                                   │
 │                                                                     │
-│ main(), interrupt handlers, helper routines                         │
+│ hal_entry(), interrupt handlers, helper routines                    │
 └─────────────────────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────────────────────┐
-│ STARTUP                                                             │
+│ HAL LAYER                                                           │
 │                                                                     │
-│ Vector Table, Reset Handler                                         │
+│ Peripheral API + instance drivers (GPIO, UART, ADC, ...)            │
+│ Applications call the API vtable; instances hold the register code  │
+└─────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│ BSP + STARTUP                                                       │
+│                                                                     │
+│ Clock init, board init, vector table, Reset_Handler                 │
 │ (interrupt vectors, BSS zero, .data copy, call main)                │
 └─────────────────────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -40,43 +49,46 @@ The result is the same across every example - this single clip shows what "it wo
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+## Roadmap
+
+The three topics feed each other. Read left to right for the learning path; the payoff is the HAL project at the end.
+
+### 1. Foundations - how the MCU boots and runs
+
+| Folder | Concept |
+|:------:|:-------:|
+| [`compiler/00-startup-c/`](compiler/00-startup-c/) | Linker script and C `Reset_Handler` |
+| [`arm-cortex-m/00-systick/`](arm-cortex-m/00-systick/) | 1 ms SysTick tick and interrupt |
+
+### 2. Driver-access progression - same LED, one new technique per step
+
+| Folder | Concept |
+|:------:|:-------:|
+| [`hal-pattern/00-register-macro/`](hal-pattern/00-register-macro/) | Macro-based register access |
+| [`hal-pattern/01-register-struct/`](hal-pattern/01-register-struct/) | Struct-based register access |
+| [`hal-pattern/02-cmsis-device/`](hal-pattern/02-cmsis-device/) | CMSIS-Device vendor headers |
+| [`hal-pattern/03-hal-blocking/`](hal-pattern/03-hal-blocking/) | HAL with blocking `HAL_Delay` |
+| [`hal-pattern/04-hal-nonblocking/`](hal-pattern/04-hal-nonblocking/) | HAL with non-blocking `HAL_GetTick` |
+
+### 3. The HAL - a portable project you can extend
+
+| Folder | Concept |
+|:------:|:-------:|
+| [`hal-pattern/05-platform/`](hal-pattern/05-platform/) | Layered HAL project: API + instance drivers + BSP + per-project config. First working module: GPIO on AK Base Kit |
+
 ## Hardware support
 
 | Board | MCU | Status |
 |:-----:|:---:|:------:|
 | [AK Embedded Base Kit](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) | STM32L151CBT6 (ARM Cortex-M3) | Primary target |
 
-## Topics
-
-### [`compiler/`](compiler/)
-
-| Folder | Concept |
-|:------:|:-------:|
-| [`00-startup-c/`](compiler/00-startup-c/) | Linker script and C `Reset_Handler` |
-
-### [`arm-cortex-m/`](arm-cortex-m/)
-
-| Folder | Concept |
-|:------:|:-------:|
-| [`00-systick/`](arm-cortex-m/00-systick/) | 1 ms SysTick tick and interrupt |
-
-### [`hal-pattern/`](hal-pattern/)
-
-| Folder | Concept |
-|:------:|:-------:|
-| [`00-register-macro/`](hal-pattern/00-register-macro/) | Macro-based register access |
-| [`01-register-struct/`](hal-pattern/01-register-struct/) | Struct-based register access |
-| [`02-cmsis-device/`](hal-pattern/02-cmsis-device/) | CMSIS-Device vendor headers |
-| [`03-hal-blocking/`](hal-pattern/03-hal-blocking/) | HAL with blocking `HAL_Delay` |
-| [`04-hal-nonblocking/`](hal-pattern/04-hal-nonblocking/) | HAL with non-blocking `HAL_GetTick` |
-
 ## Quick start
 
-To build the source and flash firmware onto the kit, you need a Linux development environment. Step-by-step setup instructions:
+Linux dev environment. Toolchain setup and board wiring:
 
 **[AK Embedded Base Kit STM32L151 - Getting Started](https://epcb.vn/blogs/ak-embedded-software/ak-embedded-base-kit-stm32l151-getting-started)**
 
-Once the toolchain is ready, each example builds the same way:
+Each learning example builds the same way:
 
 ```bash
 cd compiler/00-startup-c
@@ -84,6 +96,8 @@ make          # build .elf and .bin
 make flash    # flash to board
 make debug    # openocd + arm-none-eabi-gdb
 ```
+
+For the HAL project (`05-platform/`), see [its README](hal-pattern/05-platform/README.md) - it uses `NAME_MODULE` and `PROJECT_DIR` to pick which example to build.
 
 ## References
 
