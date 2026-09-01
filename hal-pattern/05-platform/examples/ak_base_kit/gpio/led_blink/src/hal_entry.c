@@ -29,7 +29,7 @@ void hal_entry(void)
 		err = g_gpio.p_api->pinWrite(g_gpio.p_ctrl, led_pin, level);
 		hal_entry_error_trap(err);
 
-		bsp_software_delay(LED_BLINK_DELAY_MS, BSP_DELAY_UNITS_MILLISECONDS);
+		BSP_SoftwareDelay(LED_BLINK_DELAY_MS, BSP_DELAY_UNITS_MILLISECONDS);
 	}
 }
 

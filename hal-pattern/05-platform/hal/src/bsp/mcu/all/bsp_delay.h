@@ -14,7 +14,7 @@ typedef enum e_bsp_delay_units
 	BSP_DELAY_UNITS_MICROSECONDS = 1
 } bsp_delay_units_t;
 
-void bsp_software_delay(uint32_t delay, bsp_delay_units_t units);
+void BSP_SoftwareDelay(uint32_t delay, bsp_delay_units_t units);
 
 HAL_FOOTER
 

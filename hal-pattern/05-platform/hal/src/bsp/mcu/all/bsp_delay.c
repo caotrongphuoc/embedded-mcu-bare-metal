@@ -10,7 +10,7 @@ extern uint32_t SystemCoreClock;
 
 BSP_ATTRIBUTE_STACKLESS static void bsp_prv_software_delay_loop(uint32_t loop_count);
 
-void bsp_software_delay(uint32_t delay, bsp_delay_units_t units)
+void BSP_SoftwareDelay(uint32_t delay, bsp_delay_units_t units)
 {
 	uint32_t iclk_hz        = SystemCoreClock;
 	uint32_t total_us       = delay * (uint32_t) units;
