@@ -63,7 +63,7 @@ The first example uses GPIO and the BSP software delay to blink the LED. A new p
 
 ### IV. Build
 
-Requires the Arm GNU Toolchain (`arm-none-eabi-gcc`, tested with GCC 10.3). The Makefile expects it at `$(GCC_PATH)`. Set `GCC_PATH=` if installed elsewhere.
+Requires the Arm GNU Toolchain (arm-none-eabi-gcc, tested with GCC 10.3). The Makefile expects it at GCC_PATH. Set GCC_PATH= on the make command line if installed elsewhere.
 
 Build the default LED blink firmware:
 
@@ -71,14 +71,14 @@ Build the default LED blink firmware:
 make
 ```
 
-Build a different example. Point `NAME_MODULE` at the example name and `PROJECT_DIR` at the example folder:
+Build a different example. Set NAME_MODULE to the example name and PROJECT_DIR to the example folder:
 
 ```sh
 make NAME_MODULE=led_blink   PROJECT_DIR=examples/ak_base_kit/gpio/led_blink
 make NAME_MODULE=echo        PROJECT_DIR=examples/ak_base_kit/uart/echo
 ```
 
-Output goes to `build_<NAME_MODULE>/<NAME_MODULE>.{elf,map,bin}`.
+Output goes to build_<NAME_MODULE>/<NAME_MODULE>.{elf,map,bin}.
 
 Clean:
 
@@ -88,11 +88,11 @@ make clean
 
 ### V. Flash
 
-The firmware in `build_<NAME_MODULE>/<NAME_MODULE>.bin` is a standalone image linked at `0x08000000`.
+The firmware in build_<NAME_MODULE>/<NAME_MODULE>.bin is a standalone image linked at 0x08000000.
 
 > **Warning:** the AK Embedded Base Kit ships with an AK bootloader at the same flash origin. Flashing this image with SWD overwrites the bootloader. Save the bootloader image first if you want to restore it later.
 
-Uses STM32CubeProgrammer over SWD. Default path is `$(HOME)/Workspace/Tools/STM32CubeProgrammer/bin`. Set `PROGRAMER_PATH=` if installed elsewhere.
+Uses STM32CubeProgrammer over SWD. Default path is $(HOME)/Workspace/Tools/STM32CubeProgrammer/bin. Set PROGRAMER_PATH= if installed elsewhere.
 
 ```sh
 make flash
@@ -102,32 +102,32 @@ make flash APP_START_ADDR=0x08003000     # skip the AK bootloader region
 
 ### VI. Debug
 
-Runs `openocd` in a new `xterm` and launches GDB (or DDD) attached to the ELF.
+Runs openocd in a new xterm and launches GDB (or DDD) attached to the ELF.
 
 ```sh
 make debug
 make debug gdb=ddd
 ```
 
-Needs `stm32l_init.gdb` in the folder (same style as folders 00 to 04).
+Needs stm32l_init.gdb in the folder (same style as folders 00 to 04).
 
 ### VII. Porting checklist
 
 **Add a new board on STM32L1:**
 
-1. Create `board/<board_name>/` with `board.h`, `board_init.[ch]`, `board_leds.[ch]`.
-2. Define `BOARD_<NAME>` in `board.h`.
-3. Add a new example under `examples/<board_name>/<peripheral>/<example>/` with its own `hal_cfg/` and `hal_gen/`.
-4. Build with `make PROJECT_DIR=examples/<board_name>/...`.
+1. Create board/<board_name>/ with board.h, board_init.[ch], board_leds.[ch].
+2. Define BOARD_<NAME> in board.h.
+3. Add a new example under examples/<board_name>/<peripheral>/<example>/ with its own hal_cfg/ and hal_gen/.
+4. Build with make PROJECT_DIR=examples/<board_name>/...
 
 **Add a new MCU:**
 
-1. Put the vendor CMSIS headers under `cmsis/` (or a per-MCU subfolder).
-2. Add `hal/src/bsp/mcu/<mcu>/bsp_clocks.[ch]` for clock init.
-3. For each peripheral you use, add `hal/src/<mcu>_<peripheral>/<mcu>_<peripheral>.c` that implements the API vtable `g_<mod>_on_<mcu>_<peripheral>`.
-4. Add a linker script under `script/` for the new MCU memory map.
-5. Add a startup file that calls `SystemInit` and then `main`. `main` is defined weakly in `bsp_common.c`.
-6. Application code (`hal_entry.c`) does not change. Only `hal_data.c` binds the new instance vtable.
+1. Put the vendor CMSIS headers under cmsis/ (or a per-MCU subfolder).
+2. Add hal/src/bsp/mcu/<mcu>/bsp_clocks.[ch] for clock init.
+3. For each peripheral you use, add hal/src/<mcu>_<peripheral>/<mcu>_<peripheral>.c that implements the API vtable g_<mod>_on_<mcu>_<peripheral>.
+4. Add a linker script under script/ for the new MCU memory map.
+5. Add a startup file that calls SystemInit and then main. main is defined weakly in bsp_common.c.
+6. Application code (hal_entry.c) does not change. Only hal_data.c binds the new instance vtable.
 
 ### VIII. References
 
