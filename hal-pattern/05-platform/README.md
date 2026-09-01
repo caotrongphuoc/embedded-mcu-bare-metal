@@ -38,9 +38,7 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 │       │   └── mcu/
 │       │       ├── all/             # BSP code shared by supported MCUs
 │       │       └── stm32l1/         # STM32L1 clock initialization
-│       └── mcu/
-│           └── stm32l1/             # STM32L1 peripheral implementations
-│               └── gpio/
+│       └── stm32l1_gpio/            # STM32L1 GPIO driver instance
 └── script/
     └── stm32l151cbtx_flash.ld        # STM32L151CB Flash and RAM layout
 ```
@@ -49,9 +47,9 @@ Folders are added with their first working module. The repository does not keep 
 
 ### III. Board Bring Up
 
-A board using STM32L151 needs a board directory under `board`. Each example keeps its pin, instance, and build configuration in its own `hal_gen` and `hal_cfg` directories. It reuses the peripheral implementations under `hal/src/mcu/stm32l1`.
+A board using STM32L151 needs a board directory under `board`. Each example keeps its pin, instance, and build configuration in its own `hal_gen` and `hal_cfg` directories. It reuses the peripheral implementations under `hal/src/stm32l1_*`.
 
-A board using another MCU needs register definitions, an MCU BSP under `hal/src/bsp/mcu`, and peripheral implementations under `hal/src/mcu`. Existing applications and device drivers remain unchanged when the new target provides the same APIs.
+A board using another MCU needs register definitions, an MCU BSP under `hal/src/bsp/mcu`, and one driver folder per peripheral instance under `hal/src/<instance>` (for example `hal/src/nrf52_gpio`). Existing applications and device drivers remain unchanged when the new target provides the same APIs.
 
 ### IV. First Target
 

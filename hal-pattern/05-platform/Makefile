@@ -65,7 +65,7 @@ BSP_SOURCES := \
 	hal/src/bsp/mcu/stm32l1/bsp_clocks.c
 
 HAL_SOURCES := \
-	hal/src/mcu/stm32l1/gpio/stm32l1_gpio.c
+	hal/src/stm32l1_gpio/stm32l1_gpio.c
 
 GENERATED_SOURCES := \
 	$(PROJECT_DIR)/hal_gen/hal_data.c \
