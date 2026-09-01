@@ -261,15 +261,10 @@ hal_err_t STM32L1_GPIO_PortDirectionSet(hal_gpio_ctrl_t * const p_ctrl,
 
 static void stm32l1_gpio_pins_config(hal_gpio_cfg_t const * p_cfg)
 {
-    uint16_t         pin_count;
-    hal_gpio_cfg_t * p_pin_data;
-
-    p_pin_data = (hal_gpio_cfg_t *) p_cfg;
-
-    for (pin_count = 0U; pin_count < p_pin_data->number_of_pins; pin_count++)
+    for (uint16_t pin_count = 0U; pin_count < p_cfg->number_of_pins; pin_count++)
     {
-        stm32l1_gpio_pin_config(p_pin_data->p_pin_cfg_data[pin_count].pin,
-                                p_pin_data->p_pin_cfg_data[pin_count].pin_cfg);
+        stm32l1_gpio_pin_config(p_cfg->p_pin_cfg_data[pin_count].pin,
+                                p_cfg->p_pin_cfg_data[pin_count].pin_cfg);
     }
 }
 
