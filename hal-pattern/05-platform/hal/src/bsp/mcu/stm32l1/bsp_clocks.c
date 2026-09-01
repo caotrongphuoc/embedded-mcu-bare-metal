@@ -122,7 +122,6 @@ static void bsp_clock_set_prechange(uint32_t requested_freq_hz);
 /** Initializes the system clocks. */
 void bsp_clock_init(void)
 {
-	SystemInit();
 	bsp_clock_set_prechange(BSP_CFG_SYSCLK_HZ);
 
 	RCC->CR &= ~RCC_CR_HSEBYP;

@@ -60,9 +60,8 @@ defined in linker script */
   .type Reset_Handler, %function
 Reset_Handler:
 
-
-/* Call the clock system initialization function.*/
-    bl  bsp_clock_init
+/* Call the CMSIS system initialization function. */
+    bl  SystemInit
 
 /* Copy the data segment initializers from flash to SRAM */
   ldr r0, =_sdata
