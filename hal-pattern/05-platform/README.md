@@ -21,26 +21,23 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 ├── board/
 │   └── ak_base_kit/                 # board initialization and devices
 ├── cmsis/                           # Cortex M and MCU register definitions
-├── driver/                          # LED, button, display and external devices
 ├── examples/
-│   └── led-blink/                   # first hardware test
+│   └── ak_base_kit/
+│       └── gpio/
+│           └── led_blink/
+│               ├── hal_cfg/        # project build configuration
+│               └── hal_gen/        # project instances and pin data
 ├── hal/
 │   ├── inc/
 │   │   ├── api/                     # interfaces shared by all MCUs
 │   │   └── instances/               # peripheral instances used by applications
 │   └── src/
 │       ├── bsp/
-│       │   ├── mcu/
-│       │   │   └── stm32l1/         # clock, startup, interrupt and memory
+│       │   └── mcu/
+│       │       └── stm32l1/         # clock, startup, interrupt and memory
 │       └── mcu/
 │           └── stm32l1/             # STM32L1 peripheral implementations
-│               ├── gpio/
-│               ├── time/
-│               └── wdt/
-├── hal_cfg/
-│   ├── bsp/                          # target build options
-│   └── driver/                       # peripheral module options
-├── hal_gen/                          # control, configuration and instances
+│               └── gpio/
 └── script/
     └── stm32l151cbtx_flash.ld        # STM32L151CB Flash and RAM layout
 ```
@@ -49,7 +46,7 @@ Folders are added with their first working module. The repository does not keep 
 
 ### III. Board Bring Up
 
-A board using STM32L151 needs a board directory under `board` and its pin and instance data in `hal_gen`. It reuses the peripheral implementations under `hal/src/mcu/stm32l1`.
+A board using STM32L151 needs a board directory under `board`. Each example keeps its pin, instance, and build configuration in its own `hal_gen` and `hal_cfg` directories. It reuses the peripheral implementations under `hal/src/mcu/stm32l1`.
 
 A board using another MCU needs register definitions, an MCU BSP under `hal/src/bsp/mcu`, and peripheral implementations under `hal/src/mcu`. Existing applications and device drivers remain unchanged when the new target provides the same APIs.
 
@@ -63,7 +60,17 @@ LED    : PB8
 
 The first example uses GPIO and the system tick to blink the LED. Another peripheral is added only with an example that can be built and tested.
 
-### V. References
+### V. Build
+
+The build requires the Arm GNU Toolchain in `PATH`. Build the platform sources with:
+
+```sh
+make platform
+```
+
+Application sources are listed by the project Makefile. The first application is added with the LED blink example.
+
+### VI. References
 
 1. [Renesas RA0E3](https://www.renesas.com/en/products/ra0e3): MCU overview and technical documents.
 2. [FSP Architecture](https://renesas.github.io/fsp/_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html): interfaces, instances, API conventions, build time configuration, and file structure.
