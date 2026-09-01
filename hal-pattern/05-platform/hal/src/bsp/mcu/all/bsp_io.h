@@ -1,5 +1,5 @@
-#ifndef BSP_IO_H
-#define BSP_IO_H
+#ifndef __BSP_IO_H__
+#define __BSP_IO_H__
 
 #include <stdint.h>
 
@@ -29,4 +29,4 @@ typedef enum e_bsp_io_direction
 
 HAL_FOOTER
 
-#endif // BSP_IO_H
+#endif // __BSP_IO_H__
