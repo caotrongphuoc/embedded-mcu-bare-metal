@@ -1,8 +1,9 @@
 # HAL pattern
 
-Peripheral driver patterns: raw register access (macro and struct), CMSIS-Device, HAL blocking, and HAL non-blocking.
+Two things live here:
 
-Same LED blink behavior in every subfolder - only the way registers are declared and touched changes.
+1. **A driver-access progression** in folders 00 to 04. Same LED blink, one new technique per step. The diff from one folder to the next shows the new concept.
+2. **The HAL project** in folder 05. A layered HAL you can port to more than one MCU. LED blink is its first working module, more come later.
 
 ## Subfolders
 
@@ -15,7 +16,7 @@ Same LED blink behavior in every subfolder - only the way registers are declared
 | 02 | [`02-cmsis-device/`](02-cmsis-device/) | CMSIS-Device vendor headers |
 | 03 | [`03-hal-blocking/`](03-hal-blocking/) | HAL with blocking `HAL_Delay` |
 | 04 | [`04-hal-nonblocking/`](04-hal-nonblocking/) | HAL with non-blocking `HAL_GetTick` |
-| 05 | [`05-platform/`](05-platform/) | Layered platform HAL (STM32L1 + AK Base Kit) |
+| 05 | [`05-platform/`](05-platform/) | Layered HAL project: API + instance drivers + BSP + per-project config |
 
 </div>
 
@@ -25,7 +26,6 @@ Read [`arm-cortex-m/00-systick`](../arm-cortex-m/00-systick/) first. Folders 00 
 
 ## Reading order
 
-Read 00 to 04 in order. Each step wraps the previous one.
+Read 00 to 04 in order. Each step wraps the previous one and prepares you for 05.
 
-Folder 05 is a separate track. It is a full platform HAL with per-instance driver folders and BSP layer, instead of a single blink pattern.
-
+Folder 05 is where the HAL itself lives. It is not the same LED blink pattern, it is a full project with its own API, driver instances, BSP layer, and per-project config. First working module: GPIO on AK Base Kit. More modules (UART, ADC, and so on) come as new examples.
