@@ -4,7 +4,7 @@
 
 This project builds a reusable Hardware Abstraction Layer for MCU platforms. STM32L151 on the AK Embedded Base Kit is the first target used to write and test it.
 
-The layout, naming, and configuration follow Renesas FSP (Flexible Software Package) so the source reads side by side with FSP. The interfaces do not depend on the MCU or the board. Porting to another target needs a peripheral implementation, board support, and target configuration.
+The HAL uses a layered platform layout: one API per peripheral, one instance driver folder per MCU peripheral, a BSP layer for chip and board init, and per-project config headers. The interfaces do not depend on the MCU or the board. Porting to another target needs a peripheral implementation, board support, and target configuration.
 
 ### I. Design
 
@@ -133,6 +133,5 @@ To keep the AK bootloader, edit the linker `ORIGIN` to skip past the bootloader 
 
 ### VII. References
 
-1. [Renesas RA0E3](https://www.renesas.com/en/products/ra0e3): MCU overview and technical documents.
-2. [FSP Architecture](https://renesas.github.io/fsp/_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html): interfaces, instances, API conventions, build time configuration, and file structure.
-3. [FSP Support for RA0E3](https://renesas.github.io/fsp/group___b_s_p___m_c_u___r_a0_e3.html): BSP configuration and peripheral modules supported by RA0E3.
+1. [STM32L151 reference manual (RM0038)](https://www.st.com/resource/en/reference_manual/rm0038-stm32l100xx-stm32l151xx-stm32l152xx-and-stm32l162xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf): register map and peripheral behaviour.
+2. [Cortex-M3 Devices Generic User Guide](https://developer.arm.com/documentation/dui0552/a/): SysTick, NVIC, memory model.

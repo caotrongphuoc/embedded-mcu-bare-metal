@@ -7,7 +7,7 @@
 #include "bsp_cfg.h"
 #endif
 
-/** Assert / logging behaviour (BSP-level, follows FSP BSP_CFG_ASSERT):
+/** Assert / logging behaviour (BSP-level):
  *  1 = HAL_ASSERT returns HAL_ERR_ASSERTION + calls hal_error_log (default)
  *  2 = HAL_ASSERT calls C assert() (aborts, useful under debugger)
  *  3 = HAL_ASSERT compiles out; no runtime overhead

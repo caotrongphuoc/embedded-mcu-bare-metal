@@ -2,7 +2,7 @@
 #include "bsp_delay.h"
 
 #define BSP_DELAY_US_PER_SECOND    (1000000U)
-/* Cycles per inner-loop iteration. 4 matches FSP for Cortex-M4;
+/* Cycles per inner-loop iteration. Set to 4 as a working default;
  * verify with a scope on Cortex-M3 if delay accuracy matters. */
 #define BSP_DELAY_LOOP_CYCLES      (4U)
 

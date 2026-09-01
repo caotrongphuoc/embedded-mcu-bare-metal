@@ -15,14 +15,17 @@ Same LED blink behavior in every subfolder - only the way registers are declared
 | 02 | [`02-cmsis-device/`](02-cmsis-device/) | CMSIS-Device vendor headers |
 | 03 | [`03-hal-blocking/`](03-hal-blocking/) | HAL with blocking `HAL_Delay` |
 | 04 | [`04-hal-nonblocking/`](04-hal-nonblocking/) | HAL with non-blocking `HAL_GetTick` |
+| 05 | [`05-platform/`](05-platform/) | Layered platform HAL (STM32L1 + AK Base Kit) |
 
 </div>
 
 ## Before you start
 
-Read [`arm-cortex-m/00-systick`](../arm-cortex-m/00-systick/) first - every folder here uses SysTick for the 1 ms tick.
+Read [`arm-cortex-m/00-systick`](../arm-cortex-m/00-systick/) first. Folders 00 to 04 use SysTick for the 1 ms tick.
 
 ## Reading order
 
-Read them 00 -> 01 -> 02 -> 03 -> 04 - each step wraps the previous one.
+Read 00 to 04 in order. Each step wraps the previous one.
+
+Folder 05 is a separate track. It is a full platform HAL with per-instance driver folders and BSP layer, instead of a single blink pattern.
 
