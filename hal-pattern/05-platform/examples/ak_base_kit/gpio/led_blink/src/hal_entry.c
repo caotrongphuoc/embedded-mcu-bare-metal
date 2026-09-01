@@ -12,7 +12,7 @@ void hal_entry(void)
 	bsp_io_level_t    level   = BSP_IO_LEVEL_LOW;
 	bsp_io_port_pin_t led_pin = g_bsp_leds.p_leds[BSP_LED_LED1];
 
-	err = STM32L1_GPIO_Open(&g_gpio_ctrl, &g_bsp_pin_cfg);
+	err = g_gpio.p_api->open(g_gpio.p_ctrl, g_gpio.p_cfg);
 	hal_entry_error_trap(err);
 
 	while (1)
@@ -26,7 +26,7 @@ void hal_entry(void)
 			level = BSP_IO_LEVEL_LOW;
 		}
 
-		err = STM32L1_GPIO_PinWrite(&g_gpio_ctrl, led_pin, level);
+		err = g_gpio.p_api->pinWrite(g_gpio.p_ctrl, led_pin, level);
 		hal_entry_error_trap(err);
 
 		bsp_software_delay(LED_BLINK_DELAY_MS, BSP_DELAY_UNITS_MILLISECONDS);
