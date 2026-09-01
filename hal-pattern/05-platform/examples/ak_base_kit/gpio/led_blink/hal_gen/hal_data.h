@@ -8,6 +8,8 @@ HAL_HEADER
 
 extern const hal_gpio_instance_t g_gpio;
 
+void hal_entry(void);
+
 HAL_FOOTER
 
 #endif // __HAL_DATA_H__

@@ -26,7 +26,9 @@ CMSIS provides the STM32L151 register definitions. The HAL source owns the perip
 │       └── gpio/
 │           └── led_blink/
 │               ├── hal_cfg/        # project build configuration
-│               └── hal_gen/        # project instances and pin data
+│               ├── hal_gen/        # generated entry, instances and pin data
+│               └── src/
+│                   └── hal_entry.c # application entry
 ├── hal/
 │   ├── inc/
 │   │   ├── api/                     # interfaces shared by all MCUs
