@@ -13,20 +13,6 @@
 
 #define HAL_PARAMETER_NOT_USED(p)    ((void) (p))
 
-#define HAL_ERROR_RETURN(a, err)                        \
-    {                                                   \
-        if ((a))                                        \
-        {                                               \
-            (void) 0;                                   \
-        }                                               \
-        else                                            \
-        {                                               \
-            return err;                                 \
-        }                                               \
-    }
-
-#define HAL_ASSERT(a)    HAL_ERROR_RETURN((a), HAL_ERR_ASSERTION)
-
 HAL_HEADER
 
 /** Return values shared by HAL modules. */
@@ -49,6 +35,36 @@ typedef enum e_hal_err
     HAL_ERR_INVALID_STATE
 } hal_err_t;
 
+/** Weak error-log hook. Override to route errors to UART, RTT, breakpoint, etc. */
+extern void hal_error_log(hal_err_t err, const char * file, int line);
+
 HAL_FOOTER
+
+#ifndef HAL_ERROR_LOG
+#define HAL_ERROR_LOG(err)    hal_error_log((err), __FILE__, __LINE__)
+#endif
+
+#define HAL_ERROR_RETURN(a, err)                        \
+    {                                                   \
+        if ((a))                                        \
+        {                                               \
+            (void) 0;                                   \
+        }                                               \
+        else                                            \
+        {                                               \
+            HAL_ERROR_LOG(err);                         \
+            return err;                                 \
+        }                                               \
+    }
+
+#ifndef HAL_RETURN
+#define HAL_RETURN(err)                                 \
+    {                                                   \
+        HAL_ERROR_LOG(err);                             \
+        return err;                                     \
+    }
+#endif
+
+#define HAL_ASSERT(a)    HAL_ERROR_RETURN((a), HAL_ERR_ASSERTION)
 
 #endif // __HAL_COMMON_API_H__
