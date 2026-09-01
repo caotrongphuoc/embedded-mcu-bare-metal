@@ -61,6 +61,7 @@ CMSIS_SOURCES := \
 	cmsis/system_stm32l1xx.c
 
 BSP_SOURCES := \
+	hal/src/bsp/mcu/all/bsp_common.c \
 	hal/src/bsp/mcu/all/bsp_delay.c \
 	hal/src/bsp/mcu/stm32l1/bsp_clocks.c
 
@@ -69,7 +70,6 @@ HAL_SOURCES := \
 
 GENERATED_SOURCES := \
 	$(PROJECT_DIR)/hal_gen/hal_data.c \
-	$(PROJECT_DIR)/hal_gen/main.c \
 	$(PROJECT_DIR)/hal_gen/pin_data.c
 
 BOARD_SOURCES := \
