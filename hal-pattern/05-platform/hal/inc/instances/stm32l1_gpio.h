@@ -15,6 +15,13 @@ typedef struct st_stm32l1_gpio_instance_ctrl
     void   * p_context;
 } stm32l1_gpio_instance_ctrl_t;
 
+/** STM32L1 GPIO extended configuration. Assign to hal_gpio_cfg_t::p_extend
+ *  when using STM32L1-specific features. Empty placeholder for now. */
+typedef struct st_stm32l1_gpio_extended_cfg
+{
+    uint32_t reserved;
+} stm32l1_gpio_extended_cfg_t;
+
 /** STM32L1 GPIO pin configuration options. */
 typedef enum e_stm32l1_gpio_cfg_options
 {
