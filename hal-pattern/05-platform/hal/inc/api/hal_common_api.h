@@ -3,6 +3,19 @@
 
 #include <stddef.h>
 
+/** Assert / logging behaviour (BSP-level, follows FSP BSP_CFG_ASSERT):
+ *  1 = HAL_ASSERT returns HAL_ERR_ASSERTION + calls hal_error_log (default)
+ *  2 = HAL_ASSERT calls C assert() (aborts, useful under debugger)
+ *  3 = HAL_ASSERT compiles out; no runtime overhead
+ *  Override via bsp_cfg.h or the compiler command line. */
+#ifndef BSP_CFG_ASSERT
+#define BSP_CFG_ASSERT    (1)
+#endif
+
+#if (2 == BSP_CFG_ASSERT)
+#include <assert.h>
+#endif
+
 #ifdef __cplusplus
 #define HAL_HEADER    extern "C" {
 #define HAL_FOOTER    }
@@ -40,8 +53,12 @@ extern void hal_error_log(hal_err_t err, const char * file, int line);
 
 HAL_FOOTER
 
+#if (1 == BSP_CFG_ASSERT)
 #ifndef HAL_ERROR_LOG
 #define HAL_ERROR_LOG(err)    hal_error_log((err), __FILE__, __LINE__)
+#endif
+#else
+#define HAL_ERROR_LOG(err)
 #endif
 
 #define HAL_ERROR_RETURN(a, err)                        \
@@ -65,6 +82,12 @@ HAL_FOOTER
     }
 #endif
 
+#if (3 == BSP_CFG_ASSERT)
+#define HAL_ASSERT(a)
+#elif (2 == BSP_CFG_ASSERT)
+#define HAL_ASSERT(a)    { assert(a); }
+#else
 #define HAL_ASSERT(a)    HAL_ERROR_RETURN((a), HAL_ERR_ASSERTION)
+#endif
 
 #endif // __HAL_COMMON_API_H__
