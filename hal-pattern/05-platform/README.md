@@ -88,7 +88,7 @@ The firmware in `build_<NAME_MODULE>/<NAME_MODULE>.bin` is a standalone image li
 
 > **Warning:** the AK Embedded Base Kit ships with an AK bootloader at the same flash origin. Flashing this image with SWD overwrites the bootloader. Save the bootloader image first if you want to restore it later.
 
-Uses STM32CubeProgrammer over SWD. Default path is `$(HOME)/Workspace/Tools/STM32CubeProgrammer/bin`. Override with `PROGRAMER_PATH` if installed elsewhere.
+Uses STM32CubeProgrammer over SWD. Default path is `$(HOME)/workspace/tools/STM32CubeProgrammer/bin`. Override with `PROGRAMER_PATH` if installed elsewhere.
 
 ```sh
 make flash
