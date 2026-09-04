@@ -30,6 +30,26 @@ typedef enum e_hal_uart_stop_bits
 	HAL_UART_STOP_BITS_2
 } hal_uart_stop_bits_t;
 
+/** UART event delivered to the user callback. */
+typedef enum e_hal_uart_event
+{
+	HAL_UART_EVENT_RX_COMPLETE = 0,
+	HAL_UART_EVENT_TX_COMPLETE,
+	HAL_UART_EVENT_RX_CHAR,
+	HAL_UART_EVENT_ERR_PARITY,
+	HAL_UART_EVENT_ERR_FRAMING,
+	HAL_UART_EVENT_ERR_OVERFLOW
+} hal_uart_event_t;
+
+/** Arguments passed to the UART callback. */
+typedef struct st_hal_uart_callback_args
+{
+	uint8_t          channel;
+	hal_uart_event_t event;
+	uint32_t         data;         /* received byte for HAL_UART_EVENT_RX_CHAR */
+	void           * p_context;    /* user context set via hal_uart_cfg_t or callbackSet */
+} hal_uart_callback_args_t;
+
 /** UART configuration data. */
 typedef struct st_hal_uart_cfg
 {
@@ -37,6 +57,8 @@ typedef struct st_hal_uart_cfg
 	hal_uart_data_bits_t data_bits;
 	hal_uart_parity_t    parity;
 	hal_uart_stop_bits_t stop_bits;
+	void              (* p_callback)(hal_uart_callback_args_t * p_args);
+	void               * p_context;
 	void const         * p_extend;
 } hal_uart_cfg_t;
 
@@ -57,6 +79,11 @@ typedef struct st_hal_uart_api
 
 	/** Close the UART driver. */
 	hal_err_t (* close)(hal_uart_ctrl_t * const p_ctrl);
+
+	/** Register a callback and context. Replaces the values from open(). */
+	hal_err_t (* callbackSet)(hal_uart_ctrl_t * const p_ctrl,
+	                          void                 (* p_callback)(hal_uart_callback_args_t *),
+	                          void * const            p_context);
 } hal_uart_api_t;
 
 /** UART instance. */
