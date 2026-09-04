@@ -6,4 +6,6 @@
 
 #define BOARD_AK_BASE_KIT
 
+#define AK_BASE_KIT_LED_PIN    ((bsp_io_port_pin_t) 0x0108)   /* PB8 */
+
 #endif // __BOARD_H__

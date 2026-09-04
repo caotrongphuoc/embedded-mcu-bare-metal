@@ -1,5 +1,4 @@
 #include "board.h"
-#include "pin_data.h"
 
 #if defined(BOARD_AK_BASE_KIT)
 
