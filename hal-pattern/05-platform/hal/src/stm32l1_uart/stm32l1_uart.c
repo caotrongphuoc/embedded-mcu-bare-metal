@@ -14,10 +14,11 @@ static hal_err_t       stm32l1_uart_reg_config(USART_TypeDef * p_reg, hal_uart_c
 
 const hal_uart_api_t g_uart_on_stm32l1_uart =
 {
-	.open  = STM32L1_UART_Open,
-	.close = STM32L1_UART_Close,
-	.read  = STM32L1_UART_Read,
-	.write = STM32L1_UART_Write
+	.open        = STM32L1_UART_Open,
+	.close       = STM32L1_UART_Close,
+	.read        = STM32L1_UART_Read,
+	.write       = STM32L1_UART_Write,
+	.callbackSet = STM32L1_UART_CallbackSet
 };
 
 hal_err_t STM32L1_UART_Open(hal_uart_ctrl_t * const p_ctrl, hal_uart_cfg_t const * const p_cfg)
@@ -44,8 +45,30 @@ hal_err_t STM32L1_UART_Open(hal_uart_ctrl_t * const p_ctrl, hal_uart_cfg_t const
 
 	HAL_ERROR_RETURN(HAL_SUCCESS == err, err);
 
-	p_instance_ctrl->p_reg = p_reg;
-	p_instance_ctrl->open  = STM32L1_UART_OPEN;
+	p_instance_ctrl->p_reg      = p_reg;
+	p_instance_ctrl->channel    = p_cfg->channel;
+	p_instance_ctrl->p_callback = p_cfg->p_callback;
+	p_instance_ctrl->p_context  = p_cfg->p_context;
+	p_instance_ctrl->open       = STM32L1_UART_OPEN;
+
+	return HAL_SUCCESS;
+}
+
+hal_err_t STM32L1_UART_CallbackSet(hal_uart_ctrl_t * const p_ctrl,
+                                   void                 (* p_callback)(hal_uart_callback_args_t *),
+                                   void * const            p_context)
+{
+	stm32l1_uart_instance_ctrl_t * p_instance_ctrl = (stm32l1_uart_instance_ctrl_t *) p_ctrl;
+
+#if (1 == STM32L1_UART_CFG_PARAM_CHECKING_ENABLE)
+	HAL_ASSERT(NULL != p_instance_ctrl);
+	HAL_ERROR_RETURN(STM32L1_UART_OPEN == p_instance_ctrl->open, HAL_ERR_NOT_OPEN);
+#else
+	HAL_PARAMETER_NOT_USED(p_ctrl);
+#endif
+
+	p_instance_ctrl->p_callback = p_callback;
+	p_instance_ctrl->p_context  = p_context;
 
 	return HAL_SUCCESS;
 }

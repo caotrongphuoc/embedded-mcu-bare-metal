@@ -18,11 +18,13 @@ static const stm32l1_uart_extended_cfg_t g_uart_ext_cfg =
 
 static const hal_uart_cfg_t g_uart_cfg =
 {
-	.channel   = STM32L1_UART_CHANNEL_USART1,
-	.data_bits = HAL_UART_DATA_BITS_8,
-	.parity    = HAL_UART_PARITY_OFF,
-	.stop_bits = HAL_UART_STOP_BITS_1,
-	.p_extend  = &g_uart_ext_cfg
+	.channel    = STM32L1_UART_CHANNEL_USART1,
+	.data_bits  = HAL_UART_DATA_BITS_8,
+	.parity     = HAL_UART_PARITY_OFF,
+	.stop_bits  = HAL_UART_STOP_BITS_1,
+	.p_callback = NULL,
+	.p_context  = NULL,
+	.p_extend   = &g_uart_ext_cfg
 };
 
 const hal_uart_instance_t g_uart =

@@ -15,6 +15,8 @@ typedef struct st_stm32l1_uart_instance_ctrl
 {
 	uint32_t         open;
 	USART_TypeDef  * p_reg;
+	uint8_t          channel;
+	void          (* p_callback)(hal_uart_callback_args_t * p_args);
 	void           * p_context;
 } stm32l1_uart_instance_ctrl_t;
 
@@ -39,6 +41,9 @@ hal_err_t STM32L1_UART_Open(hal_uart_ctrl_t * const p_ctrl, hal_uart_cfg_t const
 hal_err_t STM32L1_UART_Close(hal_uart_ctrl_t * const p_ctrl);
 hal_err_t STM32L1_UART_Read(hal_uart_ctrl_t * const p_ctrl, uint8_t * const p_dest, uint32_t const bytes);
 hal_err_t STM32L1_UART_Write(hal_uart_ctrl_t * const p_ctrl, uint8_t const * const p_src, uint32_t const bytes);
+hal_err_t STM32L1_UART_CallbackSet(hal_uart_ctrl_t * const p_ctrl,
+                                   void                 (* p_callback)(hal_uart_callback_args_t *),
+                                   void * const            p_context);
 
 HAL_FOOTER
 
