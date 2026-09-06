@@ -43,7 +43,8 @@ BSP_SRC = \
 
 HAL_SRC = \
     hal/src/stm32l1_gpio/stm32l1_gpio.c \
-    hal/src/stm32l1_uart/stm32l1_uart.c
+    hal/src/stm32l1_uart/stm32l1_uart.c \
+    hal/src/stm32l1_tim/stm32l1_tim.c
 
 BOARD_SRC = \
     board/ak_base_kit/board_init.c \
