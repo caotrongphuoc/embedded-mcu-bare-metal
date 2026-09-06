@@ -108,14 +108,9 @@ make flash APP_START_ADDR=0x08003000     # skip the AK bootloader region
 
 ## Debug
 
-Runs openocd in a new xterm and launches GDB (or DDD) attached to the ELF.
-
 ```sh
 make debug
-make debug gdb=ddd
 ```
-
-Needs `stm32l_init.gdb` in the folder (same style as folders 00 to 04).
 
 ## Porting
 
