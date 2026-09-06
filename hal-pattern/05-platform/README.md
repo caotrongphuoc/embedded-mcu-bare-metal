@@ -57,6 +57,16 @@ Clocks  : HSE 8 MHz, PLL x12 / 3, SYSCLK 32 MHz
 
 The first example uses GPIO and the BSP software delay to blink `PB8`. A new peripheral is added only with an example that can be built and tested.
 
+## Examples
+
+Each folder under `examples/ak_base_kit/` is one working firmware. Pick which to build with `NAME_MODULE` and `PROJECT_DIR` in the next section.
+
+| Folder | Peripheral | Main loop |
+|---|---|---|
+| `gpio/led_blink` | GPIO | Toggles the LED and calls the software delay between steps. |
+| `uart/hello` | UART | Writes a line over USART1 and waits between writes. |
+| `timer/blink` | Timer | Empty. The TIM2 overflow interrupt toggles the LED through a callback. |
+
 ## Build
 
 Needs the Arm GNU Toolchain (arm-none-eabi-gcc, tested with GCC 10.3). The Makefile expects it at `GCC_PATH`. Override on the command line if installed elsewhere.
